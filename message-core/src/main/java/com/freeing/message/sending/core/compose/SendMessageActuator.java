@@ -55,7 +55,7 @@ public class SendMessageActuator {
         SendMessage sendMessage = buildSendMessage(channel);
         // Set message base part
         sendMessage.setStartTime(startDate);
-        sendMessage.setPlatform(platform);
+        sendMessage.setSendChannel(channel);
         sendMessage.setAttr(this.pretreatment.getAttr());
 
         BaseMessageTemplate messageTemplate = null;
@@ -76,6 +76,7 @@ public class SendMessageActuator {
                                   BaseMessageTemplate messageTemplate) {
         new MessageSeedAspectChain(this.sendService.getAspectList().iterator(),
                 (_sendMessage, _messageTemplate, _pretreatment) -> {
+                    MessageSend<SendMessage> finalMessageSend = null;
                     // IN-App has generic type, having to spec doing.
                     if (channel == SendChannel.IN_APP) {
                         // 查找类型匹配的站内信 MessageSend
@@ -90,7 +91,7 @@ public class SendMessageActuator {
                                     ResolvableType.forClass(messageSend.getClass()).as(AbstractInAppMessageSend.class);
                             ResolvableType genericResolvableType = specMessageSendResolvableType.getGeneric(0);
                             if (genericResolvableType.isAssignableFrom(inputResolvableType)) {
-                                messageSend.send(_sendMessage);
+                                finalMessageSend = messageSend;
                                 findFlag = true;
                                 break;
                             }
@@ -101,9 +102,14 @@ public class SendMessageActuator {
                             throw new SendMessageException(errorMsg);
                         }
                     } else {
-                        MessageSend<SendMessage> messageSend = this.sendService.getLoadBalancer().getServer(messageSends);
-                        messageSend.send(_sendMessage);
+                        finalMessageSend = this.sendService.getLoadBalancer().getServer(messageSends);
                     }
+                    if (finalMessageSend == null) {
+                        throw new SendMessageException("No found MessageSend");
+                    }
+                    _sendMessage.setPlatform(finalMessageSend.getPlatform());
+                    _sendMessage.setGroup(finalMessageSend.getGroup());
+                    finalMessageSend.send(_sendMessage);
                     _sendMessage.setEndTime(new Date());
                     return _sendMessage;
                 }

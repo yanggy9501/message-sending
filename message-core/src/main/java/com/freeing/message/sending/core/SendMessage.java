@@ -1,5 +1,7 @@
 package com.freeing.message.sending.core;
 
+import com.freeing.message.sending.core.constants.SendChannel;
+
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
@@ -34,6 +36,16 @@ public class SendMessage implements Serializable {
      * 消息的内容格式 html/text
      */
     private String contentType;
+
+    /**
+     * 发送渠道
+     */
+    private SendChannel sendChannel;
+
+    /**
+     * 分组
+     */
+    private String group;
 
     /**
      * 消息的推送渠道
@@ -105,6 +117,22 @@ public class SendMessage implements Serializable {
         this.contentType = contentType;
     }
 
+    public SendChannel getSendChannel() {
+        return sendChannel;
+    }
+
+    public void setSendChannel(SendChannel sendChannel) {
+        this.sendChannel = sendChannel;
+    }
+
+    public String getGroup() {
+        return group;
+    }
+
+    public void setGroup(String group) {
+        this.group = group;
+    }
+
     public String getPlatform() {
         return platform;
     }
@@ -161,6 +189,8 @@ public class SendMessage implements Serializable {
                 ", msgName='" + msgName + '\'' +
                 ", msgContent='" + msgContent + '\'' +
                 ", contentType='" + contentType + '\'' +
+                ", sendChannel=" + sendChannel +
+                ", group='" + group + '\'' +
                 ", platform='" + platform + '\'' +
                 ", sendFrom='" + sendFrom + '\'' +
                 ", sendTo=" + sendTo +
