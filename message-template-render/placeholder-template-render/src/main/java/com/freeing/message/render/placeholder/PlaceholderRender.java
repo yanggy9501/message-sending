@@ -1,0 +1,42 @@
+package com.freeing.message.render.placeholder;
+
+import com.freeing.message.sending.core.constants.ContentType;
+import com.freeing.message.sending.core.template.MessageTemplateRender;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+public class PlaceholderRender implements MessageTemplateRender {
+    private final Set<String> supportContentTypeSet;
+    private String openToken = "#{";
+    private String closeToken = "}";
+
+    public PlaceholderRender(String[] supportContentTypes, String openToken, String closeToken) {
+        this.supportContentTypeSet = new HashSet<String>(Arrays.asList(supportContentTypes));
+        this.supportContentTypeSet.add(ContentType.TEXT_PLAIN);
+        this.openToken = openToken;
+        this.closeToken = closeToken;
+    }
+
+    public PlaceholderRender(String[] supportContentTypes) {
+        this.supportContentTypeSet = new HashSet<String>(Arrays.asList(supportContentTypes));
+        this.supportContentTypeSet.add(ContentType.TEXT_PLAIN);
+    }
+
+    @Override
+    public boolean isSupport(String contentType) {
+        return supportContentTypeSet.contains(contentType);
+    }
+
+    @Override
+    public String render(String text, final Map<String, Object> variables) {
+        return new GenericTokenParser(this.openToken, this.closeToken, varName -> {
+            if (variables.containsKey(varName)) {
+                return variables.get(varName).toString();
+            }
+            return this.openToken + varName + this.closeToken;
+        }).parse(text);
+    }
+}
