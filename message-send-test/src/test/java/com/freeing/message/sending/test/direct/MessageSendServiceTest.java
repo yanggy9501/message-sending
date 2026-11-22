@@ -15,6 +15,7 @@ import com.freeing.message.sending.core.MessageTemplateLoader;
 import com.freeing.message.sending.core.MessageTemplateRender;
 import com.freeing.message.sending.platform.mail.DefaultMailMessageSend;
 import com.freeing.message.sending.platform.mail.MailConfig;
+import com.freeing.message.sending.test.aspect.LogIntercptor;
 import com.freeing.message.sending.test.inapp.InAppMessageSend;
 import com.freeing.message.sending.test.inapp.bean.TransInfo;
 import jakarta.activation.FileDataSource;
@@ -68,6 +69,7 @@ public class MessageSendServiceTest {
                 new LocalTemplateLoader("src/test/local-template");
         LoadBalancer loadBalancer = new RandomLoadBalancer();
         List<MessageSendAspect> aspectList = new ArrayList<>();
+        aspectList.add(new LogIntercptor());
         MessageSendService sendService = new MessageSendService(messageSendManager,
                 messageTemplateRenders,
                 messageTemplateLoader,

@@ -79,7 +79,7 @@ public class SendMessageActuator {
                                   SendMessage sendMessage,
                                   BaseMessageTemplate messageTemplate) {
         new MessageSeedAspectChain(this.sendService.getAspectList().iterator(),
-                (_sendMessage, _messageTemplate, _pretreatment) -> {
+                (_sendMessage, _messageTemplate) -> {
                     MessageSend<SendMessage> finalMessageSend = null;
                     // IN-App has generic type, having to spec doing.
                     if (channel == SendChannel.IN_APP) {
@@ -118,7 +118,7 @@ public class SendMessageActuator {
                     finalMessageSend.send(_sendMessage);
                     _sendMessage.setEndTime(new Date());
                 }
-        ).next(sendMessage, messageTemplate, this.pretreatment);
+        ).next(sendMessage, messageTemplate);
     }
 
     private SendMessage buildSendMessage(SendChannel channel) {

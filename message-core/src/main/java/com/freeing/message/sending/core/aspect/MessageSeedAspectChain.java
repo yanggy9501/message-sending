@@ -2,7 +2,6 @@ package com.freeing.message.sending.core.aspect;
 
 import com.freeing.message.sending.core.BaseMessageTemplate;
 import com.freeing.message.sending.core.SendMessage;
-import com.freeing.message.sending.core.compose.SendMessagePretreatment;
 
 import java.util.Iterator;
 
@@ -23,12 +22,11 @@ public class MessageSeedAspectChain {
      * 调用下一个切面
      */
     public void next(SendMessage sendMessage,
-                         BaseMessageTemplate template,
-                         SendMessagePretreatment pre) {
+                         BaseMessageTemplate template) {
         if (aspectIterator.hasNext()) {
-            aspectIterator.next().sendAround(this, sendMessage, template, pre);
+            aspectIterator.next().sendAround(this, sendMessage, template);
         } else {
-            chainCallback.run(sendMessage, template, pre);
+            chainCallback.run(sendMessage, template);
         }
     }
 }
