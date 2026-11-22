@@ -2,7 +2,7 @@ package com.freeing.message.sending.platform.mail;
 
 import com.freeing.message.sending.core.constants.SendChannel;
 import com.freeing.message.sending.core.exception.SendMessageException;
-import com.freeing.message.sending.core.MailSendMessage;
+import com.freeing.message.sending.core.MailMessage;
 import com.freeing.message.sending.core.MessageSend;
 import com.freeing.message.sending.core.util.CollectionUtil;
 import com.freeing.message.sending.core.util.StrUtil;
@@ -15,7 +15,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import java.util.List;
 import java.util.Properties;
 
-public class DefaultMailMessageSend implements MessageSend<MailSendMessage> {
+public class DefaultMailMessageSend implements MessageSend<MailMessage> {
     private static final String UTF8 = "UTF-8";
     private static final String HTML = "html";
 
@@ -59,7 +59,7 @@ public class DefaultMailMessageSend implements MessageSend<MailSendMessage> {
     }
 
     @Override
-    public void send(MailSendMessage sendMessage) {
+    public void send(MailMessage sendMessage) {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         try {
             boolean hasMultipart = CollectionUtil.isEmpty(sendMessage.getAttachments()) ||

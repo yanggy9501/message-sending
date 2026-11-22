@@ -16,6 +16,7 @@
     <modules>
         <module>message-send-platform-mail</module>
         <module>message-send-platform-inapp</module>
+        <module>message-send-platform-firebase</module>
     </modules>
 
 </project>

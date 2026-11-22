@@ -5,7 +5,7 @@ import com.freeing.message.render.placeholder.PlaceholderRender;
 import com.freeing.message.sending.core.BaseMessageTemplate;
 import com.freeing.message.sending.core.InAppTarget;
 import com.freeing.message.sending.core.MailTarget;
-import com.freeing.message.sending.core.SendService;
+import com.freeing.message.sending.core.MessageSendService;
 import com.freeing.message.sending.core.aspect.MessageSendAspect;
 import com.freeing.message.sending.core.constants.SendChannel;
 import com.freeing.message.sending.core.loadbalancer.LoadBalancer;
@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
 
-public class SendServiceTest {
+public class MessageSendServiceTest {
 
     @Test
     public void testInAppSend1() {
@@ -36,7 +36,7 @@ public class SendServiceTest {
         MessageTemplateLoader<? extends BaseMessageTemplate, ?> messageTemplateLoader = new LocalTemplateLoader("~/tmp/msg");
         LoadBalancer loadBalancer = new RandomLoadBalancer();
         List<MessageSendAspect> aspectList = new ArrayList<>();
-        SendService sendService = new SendService(messageSendManager,
+        MessageSendService sendService = new MessageSendService(messageSendManager,
                 messageTemplateRenders,
                 messageTemplateLoader,
                 loadBalancer,
@@ -68,7 +68,7 @@ public class SendServiceTest {
                 new LocalTemplateLoader("src/test/local-template");
         LoadBalancer loadBalancer = new RandomLoadBalancer();
         List<MessageSendAspect> aspectList = new ArrayList<>();
-        SendService sendService = new SendService(messageSendManager,
+        MessageSendService sendService = new MessageSendService(messageSendManager,
                 messageTemplateRenders,
                 messageTemplateLoader,
                 loadBalancer,
@@ -90,10 +90,10 @@ public class SendServiceTest {
     }
 
     public static void main(String[] args) {
-        new SendServiceTest().testMailSend1();
+        new MessageSendServiceTest().testMailSend1();
     }
 
-    public void testMailSend1() {
+    private void testMailSend1() {
         MessageSendManager messageSendManager = new MessageSendManager();
         messageSendManager.register(new InAppMessageSend());
         // mail
@@ -118,7 +118,7 @@ public class SendServiceTest {
                 new LocalTemplateLoader("message-send-test/src/test/local-template");
         LoadBalancer loadBalancer = new RandomLoadBalancer();
         List<MessageSendAspect> aspectList = new ArrayList<>();
-        SendService sendService = new SendService(messageSendManager,
+        MessageSendService sendService = new MessageSendService(messageSendManager,
                 messageTemplateRenders,
                 messageTemplateLoader,
                 loadBalancer,

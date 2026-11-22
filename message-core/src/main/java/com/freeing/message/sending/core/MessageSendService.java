@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 
-public class SendService {
+public class MessageSendService {
     private final MessageSendManager messageSendManager;
 
     private final List<MessageTemplateRender> messageTemplateRenders;
@@ -22,12 +22,12 @@ public class SendService {
 
     private final ExecutorService threadPool;
 
-    public SendService(MessageSendManager messageSendManager,
-                       List<MessageTemplateRender> messageTemplateRenders,
-                       MessageTemplateLoader<? extends BaseMessageTemplate, ?> messageTemplateLoader,
-                       LoadBalancer loadBalancer,
-                       List<MessageSendAspect> aspectList,
-                       ExecutorService threadPool) {
+    public MessageSendService(MessageSendManager messageSendManager,
+                              List<MessageTemplateRender> messageTemplateRenders,
+                              MessageTemplateLoader<? extends BaseMessageTemplate, ?> messageTemplateLoader,
+                              LoadBalancer loadBalancer,
+                              List<MessageSendAspect> aspectList,
+                              ExecutorService threadPool) {
         this.messageSendManager = messageSendManager;
         this.messageTemplateRenders = messageTemplateRenders;
         this.messageTemplateLoader = messageTemplateLoader;

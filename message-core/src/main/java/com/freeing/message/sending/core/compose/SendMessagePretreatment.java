@@ -1,6 +1,6 @@
 package com.freeing.message.sending.core.compose;
 
-import com.freeing.message.sending.core.SendService;
+import com.freeing.message.sending.core.MessageSendService;
 import com.freeing.message.sending.core.Target;
 import com.freeing.message.sending.core.constants.SendChannel;
 import com.freeing.message.sending.core.exception.SendMessageException;
@@ -9,8 +9,14 @@ import java.util.*;
 
 public class SendMessagePretreatment {
 
-    final SendService sendService;
+    final MessageSendService sendService;
 
+    /**
+     * channel 分类
+     * 指定channel则使用（channel，group=null，platform=null）的MessageSend发消息
+     * 指定channel + group则使用（channel，group，platform=null）的MessageSend发消息
+     * 指定platform 则使用（channel=null，group=null，platform）的MessageSend发消息
+     */
     private final Map<SendChannel, Map.Entry<String /* group */, String /* platform */>> channels = new HashMap<>();
 
     private boolean msgSetFlag = false;
@@ -23,17 +29,17 @@ public class SendMessagePretreatment {
 
     private Map<String, Object> variables;
 
-    private Map<SendChannel, Object> dataMap = new HashMap<>();
+    private final Map<SendChannel, Object> dataMap = new HashMap<>();
 
     private Map<String, Object> attr;
 
     private List<Target> targets;
 
-    public SendMessagePretreatment(SendService sendService) {
+    public SendMessagePretreatment(MessageSendService sendService) {
         this.sendService = sendService;
     }
 
-    protected SendService getSendService() {
+    protected MessageSendService getSendService() {
         return sendService;
     }
 

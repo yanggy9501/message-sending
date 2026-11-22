@@ -5,7 +5,7 @@ import com.freeing.message.sending.core.constants.SendChannel;
 /**
  * @param <T> 透传数据范型
  */
-public abstract class AbstractInAppMessageSend<T> implements MessageSend<InAppSendMessage<T>> {
+public abstract class AbstractInAppMessageSend<T> implements MessageSend<InAppMessage<T>> {
 
     public AbstractInAppMessageSend() {
     }

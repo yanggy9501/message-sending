@@ -14,7 +14,7 @@ import java.util.*;
 
 public class SendMessageActuator {
     private final SendMessagePretreatment pretreatment;
-    private final SendService sendService;
+    private final MessageSendService sendService;
 
     public SendMessageActuator(SendMessagePretreatment pretreatment) {
         this.pretreatment = pretreatment;
@@ -87,7 +87,7 @@ public class SendMessageActuator {
                         boolean findFlag = false;
                         Object data = null;
                         for (MessageSend<SendMessage> messageSend : messageSends) {
-                            data = ((InAppSendMessage<?>) _sendMessage).getData();
+                            data = ((InAppMessage<?>) _sendMessage).getData();
                             ResolvableType inputResolvableType = data != null ?
                                     ResolvableType.forInstance(data) :
                                     ResolvableType.forClass(Void.class);
@@ -125,7 +125,7 @@ public class SendMessageActuator {
         if (channel == SendChannel.MAIL) {
             return buildMailSendMessage();
         } else if (channel == SendChannel.IN_APP) {
-            InAppSendMessage<Object> sendMessage = new InAppSendMessage<>();
+            InAppMessage<Object> sendMessage = new InAppMessage<>();
             sendMessage.setData(pretreatment.getData(channel));
             List<Target> targets = pretreatment.getTargets();
             for (Target target : targets) {
@@ -140,8 +140,8 @@ public class SendMessageActuator {
         throw new SendMessageException("unknown channel: " + pretreatment.getChannels());
     }
 
-    private MailSendMessage buildMailSendMessage() {
-        MailSendMessage sendMessage = new MailSendMessage();
+    private MailMessage buildMailSendMessage() {
+        MailMessage sendMessage = new MailMessage();
         sendMessage.setData(this.pretreatment.getData(SendChannel.MAIL));
         // 发送者+接收者+资源
         List<Target> targets = this.pretreatment.getTargets();
