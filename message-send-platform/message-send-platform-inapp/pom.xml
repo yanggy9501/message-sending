@@ -11,4 +11,11 @@
 
     <artifactId>message-send-platform-inapp</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.freeing</groupId>
+            <artifactId>message-core</artifactId>
+            <version>${reversion}</version>
+        </dependency>
+    </dependencies>
 </project>

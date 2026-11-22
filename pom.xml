@@ -16,16 +16,39 @@
         <module>message-send-test</module>
         <module>message-template-render</module>
         <module>message-template-loader</module>
+        <module>message-send-starter</module>
     </modules>
 
     <properties>
-        <reversion>1.0-SNAPSHOT</reversion>
-
         <spring.mail.version>3.4.0</spring.mail.version>
+        <spring.boot.version>4.1.0</spring.boot.version>
+        <jakarta.version>2.1.4</jakarta.version>
 
+        <reversion>1.0-SNAPSHOT</reversion>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-mail</artifactId>
+                <version>${spring.mail.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>jakarta.activation</groupId>
+                <artifactId>jakarta.activation-api</artifactId>
+                <version>${jakarta.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 </project>
