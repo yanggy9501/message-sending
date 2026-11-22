@@ -22,14 +22,13 @@ public class MessageSeedAspectChain {
     /**
      * 调用下一个切面
      */
-    public SendMessage next(SendMessage sendMessage,
+    public void next(SendMessage sendMessage,
                          BaseMessageTemplate template,
                          SendMessagePretreatment pre) {
         if (aspectIterator.hasNext()) {
-            return aspectIterator.next().sendAround(this, sendMessage, template, pre);
+            aspectIterator.next().sendAround(this, sendMessage, template, pre);
         } else {
             chainCallback.run(sendMessage, template, pre);
         }
-        return sendMessage;
     }
 }

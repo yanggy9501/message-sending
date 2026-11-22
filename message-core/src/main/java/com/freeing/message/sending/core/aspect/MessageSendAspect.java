@@ -6,11 +6,11 @@ import com.freeing.message.sending.core.compose.SendMessagePretreatment;
 
 public interface MessageSendAspect {
 
-    default SendMessage sendAround(
+    default void sendAround(
             MessageSeedAspectChain chain,
             SendMessage sendMessage,
             BaseMessageTemplate template,
             SendMessagePretreatment pre) {
-        return chain.next(sendMessage, template, pre);
+        chain.next(sendMessage, template, pre);
     }
 }

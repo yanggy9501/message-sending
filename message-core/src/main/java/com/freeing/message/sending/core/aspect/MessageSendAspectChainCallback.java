@@ -5,5 +5,5 @@ import com.freeing.message.sending.core.SendMessage;
 import com.freeing.message.sending.core.compose.SendMessagePretreatment;
 
 public interface MessageSendAspectChainCallback {
-    SendMessage run(SendMessage sendMessage, BaseMessageTemplate template, SendMessagePretreatment pre);
+    void run(SendMessage sendMessage, BaseMessageTemplate template, SendMessagePretreatment pre);
 }

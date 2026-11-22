@@ -116,7 +116,6 @@ public class SendMessageActuator {
                     // seed message
                     finalMessageSend.send(_sendMessage);
                     _sendMessage.setEndTime(new Date());
-                    return _sendMessage;
                 }
         ).next(sendMessage, messageTemplate, this.pretreatment);
     }
