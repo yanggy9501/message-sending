@@ -5,8 +5,8 @@ import com.freeing.message.sending.core.aspect.MessageSeedAspectChain;
 import com.freeing.message.sending.core.constants.ContentType;
 import com.freeing.message.sending.core.constants.SendChannel;
 import com.freeing.message.sending.core.exception.SendMessageException;
-import com.freeing.message.sending.core.template.MessageTemplateLoader;
-import com.freeing.message.sending.core.template.MessageTemplateRender;
+import com.freeing.message.sending.core.MessageTemplateLoader;
+import com.freeing.message.sending.core.MessageTemplateRender;
 import com.freeing.message.sending.core.util.StrUtil;
 import org.springframework.core.ResolvableType;
 
@@ -101,8 +101,9 @@ public class SendMessageActuator {
                             }
                         }
                         if (!findFlag) {
-                            String errorMsg = "No such AbstractInAppMessageSend subclass with generic type=" +
-                                    (data == null ? Void.TYPE.getName() : data.getClass().toString());
+                            String errorMsg = "No such the subclass-AbstractInAppMessageSend<" +
+                                    (data == null ? Void.TYPE.getName() : data.getClass() +
+                                            ">");
                             throw new SendMessageException(errorMsg);
                         }
                     } else {
@@ -123,8 +124,7 @@ public class SendMessageActuator {
     private SendMessage buildSendMessage(SendChannel channel) {
         if (channel == SendChannel.MAIL) {
             return buildMailSendMessage();
-        }
-        else if (channel == SendChannel.IN_APP) {
+        } else if (channel == SendChannel.IN_APP) {
             InAppSendMessage<Object> sendMessage = new InAppSendMessage<>();
             sendMessage.setData(pretreatment.getData(channel));
             List<Target> targets = pretreatment.getTargets();
@@ -215,9 +215,22 @@ public class SendMessageActuator {
         @SuppressWarnings("unchecked")
         MessageTemplateLoader<? extends BaseMessageTemplate, Object> messageTemplateLoader =
                 (MessageTemplateLoader<? extends BaseMessageTemplate, Object>) this.sendService.getMessageTemplateLoader();
-        BaseMessageTemplate messageTemplate = messageTemplateLoader.loadTemplate(this.pretreatment.getTemplate());
+        // 类型检查：加载器的入参数 == 输入参数
+        ResolvableType loaderResolvableType =
+                ResolvableType.forInstance(messageTemplateLoader).as(MessageTemplateLoader.class);
+        ResolvableType specLoaderInGeneric = loaderResolvableType.getGeneric(1);
+        Object templateParam = this.pretreatment.getTemplate();
+        ResolvableType inputResolvableType =
+                ResolvableType.forInstance(templateParam);
+        if (!specLoaderInGeneric.isAssignableFrom(inputResolvableType)) {
+            throw new SendMessageException("The type of MessageTemplateLoader.loadTemplate<" +
+                    specLoaderInGeneric.getRawClass() +
+                    "> no match the type of SendService.of(" + templateParam.getClass() +
+                    ")");
+        }
+        BaseMessageTemplate messageTemplate = messageTemplateLoader.loadTemplate(templateParam);
         if (Objects.isNull(messageTemplate)) {
-            throw new SendMessageException("Template no exist: " + this.pretreatment.getTemplate());
+            throw new SendMessageException("Template no exist: " + templateParam);
         }
         return messageTemplate;
     }

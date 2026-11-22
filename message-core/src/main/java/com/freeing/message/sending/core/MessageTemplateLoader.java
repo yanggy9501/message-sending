@@ -1,6 +1,4 @@
-package com.freeing.message.sending.core.template;
-
-import com.freeing.message.sending.core.BaseMessageTemplate;
+package com.freeing.message.sending.core;
 
 public interface MessageTemplateLoader<T extends BaseMessageTemplate, I> {
 

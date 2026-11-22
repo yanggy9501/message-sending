@@ -1,4 +1,4 @@
-package com.freeing.message.sending.core.template;
+package com.freeing.message.sending.core;
 
 import java.util.Map;
 

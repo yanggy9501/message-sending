@@ -2,7 +2,7 @@ package com.freeing.message.loader.local;
 
 import com.freeing.message.sending.core.BaseMessageTemplate;
 import com.freeing.message.sending.core.exception.SendMessageException;
-import com.freeing.message.sending.core.template.MessageTemplateLoader;
+import com.freeing.message.sending.core.MessageTemplateLoader;
 
 import java.io.FileInputStream;
 import java.io.InputStream;

@@ -4,8 +4,6 @@ import com.freeing.message.sending.core.aspect.MessageSendAspect;
 import com.freeing.message.sending.core.compose.SendMessagePretreatment;
 import com.freeing.message.sending.core.loadbalancer.LoadBalancer;
 import com.freeing.message.sending.core.manager.MessageSendManager;
-import com.freeing.message.sending.core.template.MessageTemplateLoader;
-import com.freeing.message.sending.core.template.MessageTemplateRender;
 
 import java.util.ArrayList;
 import java.util.List;

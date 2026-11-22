@@ -1,7 +1,7 @@
 package com.freeing.message.render.placeholder;
 
 import com.freeing.message.sending.core.constants.ContentType;
-import com.freeing.message.sending.core.template.MessageTemplateRender;
+import com.freeing.message.sending.core.MessageTemplateRender;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -14,14 +14,14 @@ public class PlaceholderRender implements MessageTemplateRender {
     private String closeToken = "}";
 
     public PlaceholderRender(String[] supportContentTypes, String openToken, String closeToken) {
-        this.supportContentTypeSet = new HashSet<String>(Arrays.asList(supportContentTypes));
+        this.supportContentTypeSet = new HashSet<>(Arrays.asList(supportContentTypes));
         this.supportContentTypeSet.add(ContentType.TEXT_PLAIN);
         this.openToken = openToken;
         this.closeToken = closeToken;
     }
 
     public PlaceholderRender(String[] supportContentTypes) {
-        this.supportContentTypeSet = new HashSet<String>(Arrays.asList(supportContentTypes));
+        this.supportContentTypeSet = new HashSet<>(Arrays.asList(supportContentTypes));
         this.supportContentTypeSet.add(ContentType.TEXT_PLAIN);
     }
 
