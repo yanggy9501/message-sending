@@ -5,7 +5,7 @@ import com.freeing.message.sending.core.constants.SendChannel;
 /**
  * 发送平台基础配置
  */
-public abstract class BaseConfig {
+public abstract class BaseConfig<T> {
     /**
      * 渠道平台
      */
@@ -21,20 +21,24 @@ public abstract class BaseConfig {
      */
     public abstract SendChannel getChannel();
 
+    public abstract T getSelf();
+
     public String getPlatform() {
         return platform;
     }
 
-    public void setPlatform(String platform) {
+    public T setPlatform(String platform) {
         this.platform = platform;
+        return getSelf();
     }
 
     public String getGroup() {
         return group;
     }
 
-    public void setGroup(String group) {
+    public T setGroup(String group) {
         this.group = group;
+        return getSelf();
     }
 }
 

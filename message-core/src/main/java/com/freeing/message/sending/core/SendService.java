@@ -9,6 +9,7 @@ import com.freeing.message.sending.core.template.MessageTemplateRender;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 public class SendService {
     private final MessageSendManager messageSendManager;
@@ -21,16 +22,20 @@ public class SendService {
 
     private final List<MessageSendAspect> aspectList;
 
+    private final ExecutorService threadPool;
+
     public SendService(MessageSendManager messageSendManager,
                        List<MessageTemplateRender> messageTemplateRenders,
                        MessageTemplateLoader<? extends BaseMessageTemplate, ?> messageTemplateLoader,
                        LoadBalancer loadBalancer,
-                       List<MessageSendAspect> aspectList) {
+                       List<MessageSendAspect> aspectList,
+                       ExecutorService threadPool) {
         this.messageSendManager = messageSendManager;
         this.messageTemplateRenders = messageTemplateRenders;
         this.messageTemplateLoader = messageTemplateLoader;
         this.loadBalancer = loadBalancer;
         this.aspectList = aspectList == null ? new ArrayList<>() : aspectList;
+        this.threadPool = threadPool;
     }
 
     public MessageSendManager getMessageSendManager() {
@@ -51,6 +56,10 @@ public class SendService {
 
     public List<MessageSendAspect> getAspectList() {
         return aspectList;
+    }
+
+    public ExecutorService getThreadPool() {
+        return threadPool;
     }
 
     public SendMessagePretreatment of(String msgName, String msgContent) {

@@ -2,7 +2,7 @@ package com.freeing.message.sending.core;
 
 import com.freeing.message.sending.core.constants.SendChannel;
 
-public interface MessageSend<T extends SendMessage> extends AutoCloseable {
+public interface MessageSend<T extends SendMessage> {
     SendChannel getSendChannel();
 
     /**
@@ -21,9 +21,4 @@ public interface MessageSend<T extends SendMessage> extends AutoCloseable {
      * @param message 消息
      */
     void send(T message);
-
-    /**
-     * 释放相关资源
-     */
-    default void close() {}
 }

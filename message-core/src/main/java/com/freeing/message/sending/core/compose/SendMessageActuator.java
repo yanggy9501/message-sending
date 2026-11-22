@@ -21,11 +21,15 @@ public class SendMessageActuator {
         this.sendService = pretreatment.getSendService();
     }
 
-    public void execute() {
+    public void execute(boolean isAsync) {
         final Date startDate = new Date();
         Map<SendChannel, Map.Entry<String, String>> channels = this.pretreatment.getChannels();
         for (Map.Entry<SendChannel, Map.Entry<String /*group*/, String /*platform*/>> channelEntry : channels.entrySet()) {
-            executeChannel(channelEntry, startDate);
+            if (isAsync) {
+                this.sendService.getThreadPool().execute(() -> executeChannel(channelEntry, startDate));
+            } else {
+                executeChannel(channelEntry, startDate);
+            }
         }
     }
 
@@ -109,6 +113,7 @@ public class SendMessageActuator {
                     }
                     _sendMessage.setPlatform(finalMessageSend.getPlatform());
                     _sendMessage.setGroup(finalMessageSend.getGroup());
+                    // seed message
                     finalMessageSend.send(_sendMessage);
                     _sendMessage.setEndTime(new Date());
                     return _sendMessage;

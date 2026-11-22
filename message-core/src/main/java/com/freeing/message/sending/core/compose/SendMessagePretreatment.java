@@ -148,11 +148,11 @@ public class SendMessagePretreatment {
         return this;
     }
 
-    public void syncSeed() {
-        new SendMessageActuator(this).execute();
+    public void syncSend() {
+        new SendMessageActuator(this).execute(false);
     }
 
     public void asyncSend() {
-        new SendMessageActuator(this).execute();
+        new SendMessageActuator(this).execute(true);
     }
 }

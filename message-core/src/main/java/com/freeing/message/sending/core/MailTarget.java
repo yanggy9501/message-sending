@@ -2,6 +2,7 @@ package com.freeing.message.sending.core;
 
 import jakarta.activation.DataSource;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MailTarget extends Target {
@@ -80,12 +81,28 @@ public class MailTarget extends Target {
         return this;
     }
 
+    public MailTarget addAttachment(DataSource attachment) {
+        if (this.attachments == null) {
+            this.attachments = new ArrayList<>();
+        }
+        this.attachments.add(attachment);
+        return this;
+    }
+
     public List<DataSource> getInlineSources() {
         return inlineSources;
     }
 
     public MailTarget setInlineSources(List<DataSource> inlineSources) {
         this.inlineSources = inlineSources;
+        return this;
+    }
+
+    public MailTarget addInlineSource(DataSource inlineSource) {
+        if (this.inlineSources == null) {
+            this.inlineSources = new ArrayList<>();
+        }
+        this.inlineSources.add(inlineSource);
         return this;
     }
 }
