@@ -127,12 +127,13 @@ public class SendMessageActuator {
         }
         else if (channel == SendChannel.IN_APP) {
             InAppSendMessage<Object> sendMessage = new InAppSendMessage<>();
-            sendMessage.setData(pretreatment.getData());
+            sendMessage.setData(pretreatment.getData(channel));
             List<Target> targets = pretreatment.getTargets();
             for (Target target : targets) {
                 if (target instanceof InAppTarget inAppTarget) {
                     sendMessage.setSendFrom(inAppTarget.getPublisher());
                     sendMessage.setSendTo(inAppTarget.getReceivers());
+                    break;
                 }
             }
             return sendMessage;
@@ -142,7 +143,7 @@ public class SendMessageActuator {
 
     private MailSendMessage buildMailSendMessage() {
         MailSendMessage sendMessage = new MailSendMessage();
-        sendMessage.setData(this.pretreatment.getData());
+        sendMessage.setData(this.pretreatment.getData(SendChannel.MAIL));
         // 发送者+接收者+资源
         List<Target> targets = this.pretreatment.getTargets();
         for (Target target : targets) {
@@ -153,6 +154,7 @@ public class SendMessageActuator {
                 sendMessage.setBcc(mailTarget.getBcc());
                 sendMessage.setAttachments(mailTarget.getAttachments());
                 sendMessage.setInlineSources(mailTarget.getInlineSources());
+                break;
             }
         }
         return sendMessage;

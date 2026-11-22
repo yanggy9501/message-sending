@@ -23,7 +23,7 @@ public class SendMessagePretreatment {
 
     private Map<String, Object> variables;
 
-    private Object data;
+    private Map<SendChannel, Object> dataMap = new HashMap<>();
 
     private Map<String, Object> attr;
 
@@ -62,10 +62,6 @@ public class SendMessagePretreatment {
         return variables;
     }
 
-    public Object /**/getData() {
-        return data;
-    }
-
     public Map<String, Object> getAttr() {
         return attr;
     }
@@ -75,6 +71,9 @@ public class SendMessagePretreatment {
     }
 
     public SendMessagePretreatment channel(SendChannel ...channels) {
+        if (channels == null || channels.length == 0) {
+            throw new SendMessageException("SendChannel is null or empty");
+        }
         for (SendChannel channel : channels) {
             this.channels.put(channel, new AbstractMap.SimpleEntry<>(null, null));
         }
@@ -91,6 +90,9 @@ public class SendMessagePretreatment {
     }
 
     public SendMessagePretreatment platform(String ...platforms) {
+        if (platforms == null || platforms.length == 0) {
+            throw new SendMessageException("Platform is null or empty");
+        }
         for (String platform : platforms) {
             SendChannel channel = this.sendService.getMessageSendManager().getByPlatform(platform).getSendChannel();
             this.channels.compute(channel, (g, p) -> {
@@ -127,9 +129,17 @@ public class SendMessagePretreatment {
         return this;
     }
 
-    public <T> SendMessagePretreatment data(T data) {
-        this.data = data;
+    public Map<SendChannel, Object> getDataMap() {
+        return dataMap;
+    }
+
+    public <T> SendMessagePretreatment addData(SendChannel channel, T data) {
+        this.dataMap.put(channel, data);
         return this;
+    }
+
+    public Object getData(SendChannel channel) {
+        return dataMap.get(channel);
     }
 
     public SendMessagePretreatment putAttr(String key, Object value) {

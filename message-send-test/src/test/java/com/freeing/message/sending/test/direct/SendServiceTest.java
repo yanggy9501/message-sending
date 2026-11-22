@@ -45,7 +45,7 @@ public class SendServiceTest {
 
         sendService.of("hello test-inapp", "this is test inapp content: transNo=#{transNo}, amount=#{amount}")
                 .channel(SendChannel.IN_APP)
-                .data(new TransInfo("1", "FX2026", "10.00"))
+                .addData(SendChannel.IN_APP, new TransInfo("1", "FX2026", "10.00"))
                 .addTarget(new InAppTarget()
                         .setPublisher("p-user1")
                         .addReceiver("r-user1")
@@ -77,7 +77,7 @@ public class SendServiceTest {
 
         sendService.of("trans_issue")
                 .channel(SendChannel.IN_APP)
-                .data(new TransInfo("1", "FX2026", "10.00"))
+                .addData(SendChannel.IN_APP, new TransInfo("1", "FX2026", "10.00"))
                 .addTarget(new InAppTarget()
                         .setPublisher("p-user1")
                         .addReceiver("r-user1")
@@ -127,7 +127,8 @@ public class SendServiceTest {
 
         sendService.of("trans_issue")
                 .channel(SendChannel.IN_APP, SendChannel.MAIL)
-                .data(new TransInfo("1", "FX2026", "10.00"))
+                // data数据不兼容：in-app,push等透彻的不一样
+                .addData(SendChannel.IN_APP, new TransInfo("1", "FX2026", "10.00"))
                 .addTarget(new InAppTarget()
                         .setPublisher("p-user1")
                         .addReceiver("r-user1")
