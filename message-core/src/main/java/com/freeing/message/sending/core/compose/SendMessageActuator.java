@@ -118,7 +118,7 @@ public class SendMessageActuator {
                     finalMessageSend.send(_sendMessage);
                     _sendMessage.setEndTime(new Date());
                 }
-        ).next(sendMessage, messageTemplate);
+        ).next(sendMessage, messageTemplate, new HashMap<>());
     }
 
     private SendMessage buildSendMessage(SendChannel channel) {

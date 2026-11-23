@@ -4,6 +4,7 @@ import com.freeing.message.sending.core.BaseMessageTemplate;
 import com.freeing.message.sending.core.SendMessage;
 
 import java.util.Iterator;
+import java.util.Map;
 
 
 public class MessageSeedAspectChain {
@@ -22,9 +23,10 @@ public class MessageSeedAspectChain {
      * 调用下一个切面
      */
     public void next(SendMessage sendMessage,
-                         BaseMessageTemplate template) {
+                     BaseMessageTemplate template,
+                     Map<String, Object> chainContext) {
         if (aspectIterator.hasNext()) {
-            aspectIterator.next().sendAround(this, sendMessage, template);
+            aspectIterator.next().sendAround(this, sendMessage, template, chainContext);
         } else {
             chainCallback.run(sendMessage, template);
         }
