@@ -5,7 +5,6 @@ import com.freeing.message.sending.core.MessageTemplateLoader;
 import com.freeing.message.sending.core.exception.SendMessageException;
 
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
