@@ -5,7 +5,7 @@ import com.freeing.message.sending.core.constants.SendChannel;
 /**
  * 发送平台基础配置
  */
-public abstract class BaseConfig<T> {
+public abstract class BaseConfig<T extends BaseConfig<?>> {
     /**
      * 渠道平台
      */

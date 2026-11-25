@@ -14,6 +14,11 @@ public class InAppTarget extends Target {
      */
     private List<String> receivers;
 
+    /**
+     * 透传数据
+     */
+    private Object data;
+
     public String getPublisher() {
         return publisher;
     }
@@ -37,6 +42,15 @@ public class InAppTarget extends Target {
             this.receivers = new ArrayList<>();
         }
         this.receivers.add(receiver);
+        return this;
+    }
+
+    public Object getData() {
+        return data;
+    }
+
+    public InAppTarget setData(Object data) {
+        this.data = data;
         return this;
     }
 }

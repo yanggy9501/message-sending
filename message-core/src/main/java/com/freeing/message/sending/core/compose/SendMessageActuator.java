@@ -56,7 +56,7 @@ public class SendMessageActuator {
         }
 
         // Build SendMessage for send
-        SendMessage sendMessage = buildSendMessage(channel);
+        SendMessage sendMessage = buildChannelSendMessage(channel);
         // Set message base part
         sendMessage.setStartTime(startDate);
         sendMessage.setSendChannel(channel);
@@ -121,28 +121,42 @@ public class SendMessageActuator {
         ).next(sendMessage, messageTemplate, new HashMap<>());
     }
 
-    private SendMessage buildSendMessage(SendChannel channel) {
+    private SendMessage buildChannelSendMessage(SendChannel channel) {
         if (channel == SendChannel.MAIL) {
             return buildMailSendMessage();
-        } else if (channel == SendChannel.IN_APP) {
+        }
+        else if (channel == SendChannel.IN_APP) {
             InAppMessage<Object> sendMessage = new InAppMessage<>();
-            sendMessage.setData(pretreatment.getData(channel));
             List<Target> targets = pretreatment.getTargets();
             for (Target target : targets) {
                 if (target instanceof InAppTarget inAppTarget) {
                     sendMessage.setSendFrom(inAppTarget.getPublisher());
                     sendMessage.setSendTo(inAppTarget.getReceivers());
+                    sendMessage.setData(inAppTarget.getData());
                     break;
                 }
             }
             return sendMessage;
+        }
+        else if (channel == SendChannel.PUSH) {
+            PushMessage pushMessage = new PushMessage();
+            List<Target> targets = pretreatment.getTargets();
+            for (Target target : targets) {
+                if (target instanceof PushTarget pushTarget) {
+                    pushMessage.setImageUrl(pushTarget.getImageUrl());
+                    pushMessage.setClickAction(pushTarget.getClickAction());
+                    pushMessage.setData(pushTarget.getData());
+                }
+            }
+        }
+        else if (channel == SendChannel.SMS) {
+
         }
         throw new SendMessageException("unknown channel: " + pretreatment.getChannels());
     }
 
     private MailMessage buildMailSendMessage() {
         MailMessage sendMessage = new MailMessage();
-        sendMessage.setData(this.pretreatment.getData(SendChannel.MAIL));
         // 发送者+接收者+资源
         List<Target> targets = this.pretreatment.getTargets();
         for (Target target : targets) {

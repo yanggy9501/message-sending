@@ -17,5 +17,10 @@
             <artifactId>message-core</artifactId>
             <version>${reversion}</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.google.firebase</groupId>
+            <artifactId>firebase-admin</artifactId>
+        </dependency>
     </dependencies>
 </project>

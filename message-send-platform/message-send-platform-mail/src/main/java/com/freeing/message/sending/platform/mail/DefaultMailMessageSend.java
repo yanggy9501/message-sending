@@ -60,8 +60,8 @@ public class DefaultMailMessageSend implements MessageSend<MailMessage> {
 
     @Override
     public void send(MailMessage sendMessage) {
-        MimeMessage mimeMessage = mailSender.createMimeMessage();
         try {
+            MimeMessage mimeMessage = mailSender.createMimeMessage();
             boolean hasMultipart = CollectionUtil.isEmpty(sendMessage.getAttachments()) ||
                     CollectionUtil.isEmpty(sendMessage.getInlineSources());
             boolean isHtml = sendMessage.getContentType() != null &&

@@ -23,6 +23,7 @@
         <spring.mail.version>3.4.0</spring.mail.version>
         <spring.boot.version>4.1.0</spring.boot.version>
         <jakarta.version>2.1.4</jakarta.version>
+        <firebase.version>9.8.0</firebase.version>
 
         <reversion>1.0-SNAPSHOT</reversion>
         <maven.compiler.source>21</maven.compiler.source>
@@ -48,6 +49,12 @@
                 <groupId>jakarta.activation</groupId>
                 <artifactId>jakarta.activation-api</artifactId>
                 <version>${jakarta.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.google.firebase</groupId>
+                <artifactId>firebase-admin</artifactId>
+                <version>${firebase.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

@@ -29,8 +29,6 @@ public class SendMessagePretreatment {
 
     private Map<String, Object> variables;
 
-    private final Map<SendChannel, Object> dataMap = new HashMap<>();
-
     private Map<String, Object> attr;
 
     private List<Target> targets;
@@ -133,19 +131,6 @@ public class SendMessagePretreatment {
     public SendMessagePretreatment variables(Map<String, Object> variables) {
         this.variables = variables;
         return this;
-    }
-
-    public Map<SendChannel, Object> getDataMap() {
-        return dataMap;
-    }
-
-    public <T> SendMessagePretreatment addData(SendChannel channel, T data) {
-        this.dataMap.put(channel, data);
-        return this;
-    }
-
-    public Object getData(SendChannel channel) {
-        return dataMap.get(channel);
     }
 
     public SendMessagePretreatment putAttr(String key, Object value) {

@@ -44,6 +44,7 @@ public class LocalTemplateLoader implements MessageTemplateLoader<BaseMessageTem
         messageTemplate.setSupportChannels(supportChannels);
         messageTemplate.setMsgName(msgName);
 
+        boolean findTmeplateFile = false;
         List<String> templateSuffixList = Arrays.asList(TEMPLATE_SUFFIX_HTML, TEMPLATE_SUFFIX_TXT, TEMPLATE_SUFFIX_NULL);
         for (String suffix : templateSuffixList) {
             Path templatePath = Path.of(path, templateCode + suffix);
@@ -51,12 +52,15 @@ public class LocalTemplateLoader implements MessageTemplateLoader<BaseMessageTem
                 try {
                     String content = Files.readString(templatePath, StandardCharsets.UTF_8);
                     messageTemplate.setMsgContent(content);
+                    findTmeplateFile = true;
                     break;
                 } catch (Exception e) {
                     throw new SendMessageException("Error loading template-file: " + templatePath.toAbsolutePath(), e);
                 }
-
             }
+        }
+        if (!findTmeplateFile) {
+            throw new SendMessageException("No template file found for template-code: " + templateCode);
         }
         return messageTemplate;
     }

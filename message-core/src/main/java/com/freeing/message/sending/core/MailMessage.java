@@ -29,11 +29,6 @@ public class MailMessage extends SendMessage implements Serializable {
      */
     private List<DataSource> inlineSources;
 
-    /**
-     * 透传数据
-     */
-    private Object data;
-
     public List<String> getCc() {
         return cc;
     }
@@ -56,14 +51,6 @@ public class MailMessage extends SendMessage implements Serializable {
 
     public void setAttachments(List<DataSource> attachments) {
         this.attachments = attachments;
-    }
-
-    public Object getData() {
-        return data;
-    }
-
-    public void setData(Object data) {
-        this.data = data;
     }
 
     public List<DataSource> getInlineSources() {
