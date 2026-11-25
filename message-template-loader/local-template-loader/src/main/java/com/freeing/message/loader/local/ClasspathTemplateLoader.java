@@ -5,6 +5,7 @@ import com.freeing.message.sending.core.MessageTemplateLoader;
 import com.freeing.message.sending.core.exception.SendMessageException;
 
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -50,8 +51,12 @@ public class ClasspathTemplateLoader implements MessageTemplateLoader<BaseMessag
             String templatePath = path + templateCode + suffix;
             if (Files.exists(Path.of(templatePath))) {
                 try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(templatePath)) {
+                    if (inputStream == null) {
+                        throw new SendMessageException("Template file not found: " + templatePath);
+                    }
+                    String templateContent = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+                    messageTemplate.setMsgContent(templateContent);
 
-                    break;
                 } catch (Exception e) {
                     throw new SendMessageException("Error loading template-file: " + templatePath, e);
                 }
