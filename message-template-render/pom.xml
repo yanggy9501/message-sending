@@ -15,5 +15,6 @@
 
     <modules>
         <module>placeholder-template-render</module>
+        <module>thymeleaf-template-render</module>
     </modules>
 </project>

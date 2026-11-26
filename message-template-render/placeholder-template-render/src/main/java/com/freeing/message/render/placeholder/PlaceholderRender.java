@@ -14,15 +14,23 @@ public class PlaceholderRender implements MessageTemplateRender {
     private String closeToken = "}";
 
     public PlaceholderRender(String[] supportContentTypes, String openToken, String closeToken) {
-        this.supportContentTypeSet = new HashSet<>(Arrays.asList(supportContentTypes));
+        this.supportContentTypeSet = new HashSet<>();
+        if (supportContentTypes != null && supportContentTypes.length > 0) {
+            this.supportContentTypeSet.addAll(Arrays.asList(supportContentTypes));
+        }
         this.supportContentTypeSet.add(ContentType.TEXT_PLAIN);
+        this.supportContentTypeSet.add(ContentType.PLAINTEXT);
         this.openToken = openToken;
         this.closeToken = closeToken;
     }
 
     public PlaceholderRender(String[] supportContentTypes) {
-        this.supportContentTypeSet = new HashSet<>(Arrays.asList(supportContentTypes));
+        this.supportContentTypeSet = new HashSet<>();
+        if (supportContentTypes != null && supportContentTypes.length > 0) {
+            this.supportContentTypeSet.addAll(Arrays.asList(supportContentTypes));
+        }
         this.supportContentTypeSet.add(ContentType.TEXT_PLAIN);
+        this.supportContentTypeSet.add(ContentType.PLAINTEXT);
     }
 
     @Override
