@@ -14,12 +14,6 @@
     <dependencies>
         <dependency>
             <groupId>com.freeing</groupId>
-            <artifactId>message-core</artifactId>
-            <version>${reversion}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.freeing</groupId>
             <artifactId>message-send-platform-inapp</artifactId>
             <version>${reversion}</version>
         </dependency>
@@ -32,7 +26,19 @@
 
         <dependency>
             <groupId>com.freeing</groupId>
+            <artifactId>message-send-platform-firebase</artifactId>
+            <version>${reversion}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.freeing</groupId>
             <artifactId>placeholder-template-render</artifactId>
+            <version>${reversion}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.freeing</groupId>
+            <artifactId>thymeleaf-template-render</artifactId>
             <version>${reversion}</version>
         </dependency>
 
