@@ -7,12 +7,13 @@ import com.freeing.message.sending.core.constants.SendChannel;
 import com.freeing.message.sending.core.manager.MessageSendManager;
 import com.freeing.message.sending.test.inapp.bean.TransInfo;
 
-import jakarta.activation.FileDataSource;
+import jakarta.activation.URLDataSource;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
@@ -70,17 +71,15 @@ public class TestStarter {
 
     @Test
     public void testMail() {
+        URL resource = this.getClass().getClassLoader().getResource("1.png");
         messageSendService
                 .of("trans_issue")
-                .channel(SendChannel.IN_APP)
+                .channel(SendChannel.MAIL, "user1")
                 .addTarget(
                         new MailTarget()
-                                .setFrom("your-mail@qq.com")
-                                .setTo(List.of("your-mail@qq.com"))
+                                .setTo(List.of("xxx@qq.com"))
                                 .setCc(List.of("your-mail@qq.com"))
-                                .addAttachment(
-                                        new FileDataSource(
-                                                "message-send-test/src/test/local-template/trans_issue_template.txt")))
+                                .addAttachment(new URLDataSource(resource)))
                 .variables(Map.of("transType", "ISSUE", "amount", "10.00", "status", "success"))
                 .putAttr("k1", "v1")
                 .putAttr("k2", "v2")

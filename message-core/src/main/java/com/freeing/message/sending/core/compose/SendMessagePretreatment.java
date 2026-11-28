@@ -45,10 +45,6 @@ public class SendMessagePretreatment {
         return channels;
     }
 
-    public boolean isMsgSetFlag() {
-        return msgSetFlag;
-    }
-
     @SuppressWarnings("unchecked")
     public <T> T getTemplate() {
         return (T) template;
@@ -87,12 +83,9 @@ public class SendMessagePretreatment {
     public SendMessagePretreatment channel(SendChannel channel, String group) {
         this.channels.compute(
                 channel,
-                (g, p) -> {
-                    if (p == null) {
-                        return new AbstractMap.SimpleEntry<>(group, null);
-                    }
-                    return p;
-                });
+                (g, p) ->
+                        Objects.requireNonNullElseGet(
+                                p, () -> new AbstractMap.SimpleEntry<>(group, null)));
         return this;
     }
 
@@ -108,12 +101,9 @@ public class SendMessagePretreatment {
                             .getSendChannel();
             this.channels.compute(
                     channel,
-                    (g, p) -> {
-                        if (p == null) {
-                            return new AbstractMap.SimpleEntry<>(null, platform);
-                        }
-                        return p;
-                    });
+                    (g, p) ->
+                            Objects.requireNonNullElseGet(
+                                    p, () -> new AbstractMap.SimpleEntry<>(null, platform)));
         }
         return this;
     }

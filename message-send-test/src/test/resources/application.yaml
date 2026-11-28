@@ -10,10 +10,10 @@ message:
           group: user1
           host: smtp.qq.com
           port: 465
-          username: your-qq-mail
-          password: prikey
-#          fromAddress: xx
-#          fromPersonal: xx
+          username: xxxx@qq.com
+          password: gzdtqkxweebubbjf
+#          fromAddress: xxxx@qq.com
+#          fromPersonal: MAIL_USER_NAME
           properties:
-            mail.smtp.ssl.enable: true
-            mail.smtp.protocol: smtps
+            "[mail.smtp.ssl.enable]": true
+            "[mail.smtp.protocol]": smtps
