@@ -24,6 +24,10 @@ public class ThymeleafRender implements MessageTemplateRender {
         this.engine = new TemplateEngine();
     }
 
+    public ThymeleafRender() {
+        this(new String[0]);
+    }
+
     @Override
     public boolean isSupport(String contentType) {
         return supportContentTypeSet.contains(contentType);

@@ -1,5 +1,6 @@
 package com.freeing.message.sending.spring;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -7,17 +8,18 @@ import java.util.List;
 import java.util.Map;
 
 @Component
+@ConditionalOnMissingBean(SendMessageProperties.class)
 @ConfigurationProperties(prefix = "message.sending.channel")
 public class SendMessageProperties {
-    private List<? extends MailConfig> mail;
-    private List<? extends FirebaseConfig> firebase;
+    private List<MailConfig> mail;
+    private List<FirebaseConfig> firebase;
     private InAppConfig inApp;
 
     public List<? extends MailConfig> getMail() {
         return mail;
     }
 
-    public void setMail(List<? extends MailConfig> mail) {
+    public void setMail(List<MailConfig> mail) {
         this.mail = mail;
     }
 
@@ -25,7 +27,7 @@ public class SendMessageProperties {
         return firebase;
     }
 
-    public void setFirebase(List<? extends FirebaseConfig> firebase) {
+    public void setFirebase(List<FirebaseConfig> firebase) {
         this.firebase = firebase;
     }
 

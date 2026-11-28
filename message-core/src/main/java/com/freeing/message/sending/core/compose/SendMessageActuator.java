@@ -116,8 +116,7 @@ public class SendMessageActuator {
             }
         }
         String errorMsg = "No such the subclass-AbstractInAppMessageSend<" +
-                (data == null ? Void.TYPE.getName() : data.getClass() +
-                        ">");
+                (data == null ? "Void" : data.getClass()) + ">";
         throw new SendMessageException(errorMsg);
     }
 
@@ -186,6 +185,8 @@ public class SendMessageActuator {
 
     private void renderTemplate(SendMessage sendMessage, BaseMessageTemplate messageTemplate) {
         List<MessageTemplateRender> messageTemplateRenders = this.sendService.getMessageTemplateRenders();
+        boolean renderNameFlag = false;
+        boolean renderContentFlag = false;
         for (MessageTemplateRender templateRender : messageTemplateRenders) {
             // 渲染消息内容-根据content-type渲染
             String contentType = messageTemplate.getContentType();
@@ -194,13 +195,18 @@ public class SendMessageActuator {
                 String msgContent =
                         templateRender.render(messageTemplate.getMsgContent(), this.pretreatment.getVariables());
                 sendMessage.setMsgContent(msgContent);
+                renderNameFlag = true;
             }
             // 渲染消息主题-纯文本渲染
             if (templateRender.isSupport(ContentType.TEXT_PLAIN)) {
                 String msgName = templateRender.render(messageTemplate.getMsgName(),
                         this.pretreatment.getVariables());
                 sendMessage.setMsgName(msgName);
+                renderContentFlag = true;
             }
+        }
+        if (!renderNameFlag || !renderContentFlag) {
+            throw new SendMessageException("No found template render for ContentType: " + messageTemplate.getContentType());
         }
     }
 

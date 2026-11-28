@@ -1,4 +1,4 @@
-package com.freeing.message.sending.test.loader;
+package com.freeing.message.sending.test.direct;
 
 import com.freeing.message.loader.local.LocalTemplateLoader;
 import com.freeing.message.sending.core.BaseMessageTemplate;

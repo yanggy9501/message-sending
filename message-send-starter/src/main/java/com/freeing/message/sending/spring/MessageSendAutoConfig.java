@@ -2,6 +2,8 @@ package com.freeing.message.sending.spring;
 
 import com.freeing.message.loader.local.ClasspathTemplateLoader;
 import com.freeing.message.loader.local.LocalTemplateLoader;
+import com.freeing.message.render.placeholder.PlaceholderRender;
+import com.freeing.message.render.thymeleaf.ThymeleafRender;
 import com.freeing.message.sending.core.*;
 import com.freeing.message.sending.core.aspect.MessageSendAspect;
 import com.freeing.message.sending.core.exception.SendMessageException;
@@ -16,6 +18,7 @@ import com.freeing.message.sending.platform.mail.MailConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -23,6 +26,8 @@ import java.util.List;
 import java.util.concurrent.*;
 
 @Configuration
+@ConditionalOnMissingBean(MessageSendService.class)
+@EnableConfigurationProperties({SendMessageProperties.class, MessageTemplateProperties.class})
 public class MessageSendAutoConfig {
 
     @Autowired
@@ -54,20 +59,43 @@ public class MessageSendAutoConfig {
     }
 
     @Bean
+    @ConditionalOnMissingBean(PlaceholderRender.class)
+    public PlaceholderRender placeholderRender() {
+        MessageTemplateProperties.PlaceholderProperties properties = messageTemplateProperties.getPlaceholder();
+        if (properties != null) {
+            return new PlaceholderRender(
+                    properties.getSupportContentType(),
+                    properties.getOpenToken(),
+                    properties.getCloseToken());
+        }
+        return new PlaceholderRender();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(ThymeleafRender.class)
+    public ThymeleafRender thymeleafRender() {
+        MessageTemplateProperties.ThymeleafProperties properties = messageTemplateProperties.getThymeleaf();
+        if (properties != null) {
+            return new ThymeleafRender(properties.getSupportContentType());
+        }
+        return new ThymeleafRender();
+    }
+
+    @Bean
     @ConditionalOnMissingBean(MessageTemplateLoader.class)
     public MessageTemplateLoader<BaseMessageTemplate, String> messageTemplateLoader() {
-        if (messageTemplateProperties.getLocal() != null) {
+        if (messageTemplateProperties.getLocal() != null && messageTemplateProperties.getLocal().isEnable()) {
             return new LocalTemplateLoader(messageTemplateProperties.getLocal().getPath());
         }
-        if (messageTemplateProperties.getClasspath() != null) {
+        if (messageTemplateProperties.getClasspath() != null && messageTemplateProperties.getClasspath().isEnable()) {
             return new ClasspathTemplateLoader(messageTemplateProperties.getClasspath().getPath());
         }
         throw new SendMessageException("Please config the bean MessageTemplateLoader " +
                 "or the properties MessageTemplateProperties");
     }
 
-    @Bean
-    @ConditionalOnMissingBean(value = ExecutorService.class, name = "messageSendThreadPool")
+    @Bean("com.freeing.message.sending.messageSendThreadPool")
+    @ConditionalOnMissingBean(name = "messageSendThreadPool")
     public ExecutorService messageSendThreadPool() {
         return new ThreadPoolExecutor(
                 4,
@@ -86,7 +114,7 @@ public class MessageSendAutoConfig {
             @Autowired(required = false) List<MessageSendAspect> aspectList,
             @Autowired(required = false) MessageTemplateLoader<?, ?> messageTemplateLoader,
             @Autowired(required = false) LoadBalancer loadBalancer,
-            @Autowired(required = false) @Qualifier ExecutorService messageSendThreadPool) {
+            @Autowired @Qualifier("com.freeing.message.sending.messageSendThreadPool") ExecutorService threadPool) {
 
         MessageSendManager messageSendManager = new MessageSendManager();
         if (CollectionUtil.isNotEmpty(messageSends)) {
@@ -129,6 +157,6 @@ public class MessageSendAutoConfig {
                 messageTemplateLoader,
                 loadBalancer,
                 aspectList,
-                messageSendThreadPool);
+                threadPool);
     }
 }

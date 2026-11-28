@@ -1,0 +1,19 @@
+message:
+  sending:
+    template:
+      classpath:
+        enable: true
+        path: template
+    channel:
+      mail:
+        - platform: qq-server-kdfjkjf01
+          group: user1
+          host: smtp.qq.com
+          port: 465
+          username: your-qq-mail
+          password: prikey
+#          fromAddress: xx
+#          fromPersonal: xx
+          properties:
+            mail.smtp.ssl.enable: true
+            mail.smtp.protocol: smtps

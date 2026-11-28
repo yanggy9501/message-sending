@@ -1,0 +1,3 @@
+com.freeing.message.sending.spring.MessageTemplateProperties
+com.freeing.message.sending.spring.SendMessageProperties
+com.freeing.message.sending.spring.MessageSendAutoConfig

@@ -5,8 +5,7 @@ import com.freeing.message.sending.core.MessageTemplateLoader;
 import com.freeing.message.sending.core.exception.SendMessageException;
 
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
@@ -46,17 +45,22 @@ public class ClasspathTemplateLoader implements MessageTemplateLoader<BaseMessag
         messageTemplate.setMsgName(msgName);
 
         List<String> templateSuffixList = Arrays.asList(TEMPLATE_SUFFIX_HTML, TEMPLATE_SUFFIX_TXT, TEMPLATE_SUFFIX_NULL);
+        String content = null;
         for (String suffix : templateSuffixList) {
             String templatePath = path + templateCode + suffix;
-            if (Files.exists(Path.of(templatePath))) {
-                try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(templatePath)) {
-
+            try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(templatePath)) {
+                if (inputStream != null) {
+                    content =new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
                     break;
-                } catch (Exception e) {
-                    throw new SendMessageException("Error loading template-file: " + templatePath, e);
                 }
+            } catch (Exception e) {
+                throw new SendMessageException("Error loading template-file: " + templatePath, e);
             }
         }
+        if (content == null) {
+            throw new SendMessageException("template no exist: " + templateCode);
+        }
+        messageTemplate.setMsgContent(content);
         return messageTemplate;
     }
 }
