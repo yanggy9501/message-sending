@@ -4,32 +4,21 @@ import java.io.Serial;
 import java.io.Serializable;
 
 public class BaseMessageTemplate implements Serializable {
-    @Serial
-    private static final long serialVersionUID = 1L;
+    @Serial private static final long serialVersionUID = 1L;
 
-    /**
-     * 模版编码
-     */
+    /** 模版编码 */
     private String templateCode;
 
-    /**
-     * 消息标题/签名/主题，占位符用 $(var)表示
-     */
+    /** 消息标题/签名/主题，占位符用 $(var)表示 */
     private String msgName;
 
-    /**
-     * 消息内容
-     */
+    /** 消息内容 */
     private String msgContent;
 
-    /**
-     * 消息内容的格式 html/text
-     */
+    /** 消息内容的格式 html/text */
     private String contentType;
 
-    /**
-     * 模版支持的发送渠道，多个渠道用逗号(,)隔开
-     */
+    /** 模版支持的发送渠道，多个渠道用逗号(,)隔开 */
     private String supportChannels;
 
     public String getTemplateCode() {
@@ -74,12 +63,22 @@ public class BaseMessageTemplate implements Serializable {
 
     @Override
     public String toString() {
-        return "BaseMessageTemplate{" +
-                "templateCode='" + templateCode + '\'' +
-                ", msgName='" + msgName + '\'' +
-                ", msgContent='" + msgContent + '\'' +
-                ", contentType='" + contentType + '\'' +
-                ", supportChannels='" + supportChannels + '\'' +
-                '}';
+        return "BaseMessageTemplate{"
+                + "templateCode='"
+                + templateCode
+                + '\''
+                + ", msgName='"
+                + msgName
+                + '\''
+                + ", msgContent='"
+                + msgContent
+                + '\''
+                + ", contentType='"
+                + contentType
+                + '\''
+                + ", supportChannels='"
+                + supportChannels
+                + '\''
+                + '}';
     }
 }

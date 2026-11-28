@@ -5,9 +5,9 @@ import java.util.Map;
 
 public class PushTarget extends Target {
     private String imageUrl;
-    
+
     private String clickAction;
-    
+
     private Map<String, String> data = new HashMap<>();
 
     public String getImageUrl() {

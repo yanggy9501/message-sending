@@ -12,12 +12,12 @@ public class SendMessagePretreatment {
     final MessageSendService sendService;
 
     /**
-     * channel 分类
-     * 指定channel则使用（channel，group=null，platform=null）的MessageSend发消息
-     * 指定channel + group则使用（channel，group，platform=null）的MessageSend发消息
-     * 指定platform 则使用（channel=null，group=null，platform）的MessageSend发消息
+     * channel 分类 指定channel则使用（channel，group=null，platform=null）的MessageSend发消息 指定channel +
+     * group则使用（channel，group，platform=null）的MessageSend发消息 指定platform
+     * 则使用（channel=null，group=null，platform）的MessageSend发消息
      */
-    private final Map<SendChannel, Map.Entry<String /* group */, String /* platform */>> channels = new HashMap<>();
+    private final Map<SendChannel, Map.Entry<String /* group */, String /* platform */>> channels =
+            new HashMap<>();
 
     private boolean msgSetFlag = false;
 
@@ -74,7 +74,7 @@ public class SendMessagePretreatment {
         return targets;
     }
 
-    public SendMessagePretreatment channel(SendChannel ...channels) {
+    public SendMessagePretreatment channel(SendChannel... channels) {
         if (channels == null || channels.length == 0) {
             throw new SendMessageException("SendChannel is null or empty");
         }
@@ -83,28 +83,37 @@ public class SendMessagePretreatment {
         }
         return this;
     }
+
     public SendMessagePretreatment channel(SendChannel channel, String group) {
-        this.channels.compute(channel, (g, p) -> {
-            if (p == null) {
-                return new AbstractMap.SimpleEntry<>(group, null);
-            }
-            return p;
-        });
+        this.channels.compute(
+                channel,
+                (g, p) -> {
+                    if (p == null) {
+                        return new AbstractMap.SimpleEntry<>(group, null);
+                    }
+                    return p;
+                });
         return this;
     }
 
-    public SendMessagePretreatment platform(String ...platforms) {
+    public SendMessagePretreatment platform(String... platforms) {
         if (platforms == null || platforms.length == 0) {
             throw new SendMessageException("Platform is null or empty");
         }
         for (String platform : platforms) {
-            SendChannel channel = this.sendService.getMessageSendManager().getByPlatform(platform).getSendChannel();
-            this.channels.compute(channel, (g, p) -> {
-                if (p == null) {
-                    return new AbstractMap.SimpleEntry<>(null, platform);
-                }
-                return p;
-            });
+            SendChannel channel =
+                    this.sendService
+                            .getMessageSendManager()
+                            .getByPlatform(platform)
+                            .getSendChannel();
+            this.channels.compute(
+                    channel,
+                    (g, p) -> {
+                        if (p == null) {
+                            return new AbstractMap.SimpleEntry<>(null, platform);
+                        }
+                        return p;
+                    });
         }
         return this;
     }

@@ -11,10 +11,10 @@ import java.util.List;
 import java.util.Properties;
 
 public class ClasspathTemplateLoader implements MessageTemplateLoader<BaseMessageTemplate, String> {
-    private final static String TEMPLATE_SUFFIX_HTML = "_template.html";
-    private final static String TEMPLATE_SUFFIX_TXT = "_template.txt";
-    private final static String TEMPLATE_SUFFIX_NULL = "_template";
-    private final static String CONFIG_SUFFIX = "_config.properties";
+    private static final String TEMPLATE_SUFFIX_HTML = "_template.html";
+    private static final String TEMPLATE_SUFFIX_TXT = "_template.txt";
+    private static final String TEMPLATE_SUFFIX_NULL = "_template";
+    private static final String CONFIG_SUFFIX = "_config.properties";
 
     private final String path;
 
@@ -29,7 +29,8 @@ public class ClasspathTemplateLoader implements MessageTemplateLoader<BaseMessag
     public BaseMessageTemplate loadTemplate(String templateCode) {
         String configPath = path + templateCode + CONFIG_SUFFIX;
         Properties configProp = new Properties();
-        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(configPath)) {
+        try (InputStream inputStream =
+                getClass().getClassLoader().getResourceAsStream(configPath)) {
             configProp.load(inputStream);
         } catch (Exception e) {
             throw new SendMessageException("Error loading template config-file: " + configPath, e);
@@ -44,13 +45,15 @@ public class ClasspathTemplateLoader implements MessageTemplateLoader<BaseMessag
         messageTemplate.setSupportChannels(supportChannels);
         messageTemplate.setMsgName(msgName);
 
-        List<String> templateSuffixList = Arrays.asList(TEMPLATE_SUFFIX_HTML, TEMPLATE_SUFFIX_TXT, TEMPLATE_SUFFIX_NULL);
+        List<String> templateSuffixList =
+                Arrays.asList(TEMPLATE_SUFFIX_HTML, TEMPLATE_SUFFIX_TXT, TEMPLATE_SUFFIX_NULL);
         String content = null;
         for (String suffix : templateSuffixList) {
             String templatePath = path + templateCode + suffix;
-            try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(templatePath)) {
+            try (InputStream inputStream =
+                    getClass().getClassLoader().getResourceAsStream(templatePath)) {
                 if (inputStream != null) {
-                    content =new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+                    content = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
                     break;
                 }
             } catch (Exception e) {

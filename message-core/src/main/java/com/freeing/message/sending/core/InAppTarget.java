@@ -4,19 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class InAppTarget extends Target {
-    /**
-     * 发布人
-     */
+    /** 发布人 */
     private String publisher;
 
-    /**
-     * 目标
-     */
+    /** 目标 */
     private List<String> receivers;
 
-    /**
-     * 透传数据
-     */
+    /** 透传数据 */
     private Object data;
 
     public String getPublisher() {

@@ -1,44 +1,30 @@
 package com.freeing.message.sending.platform.mail;
 
-import com.freeing.message.sending.core.properties.BaseConfig;
 import com.freeing.message.sending.core.constants.SendChannel;
+import com.freeing.message.sending.core.properties.BaseConfig;
 
 import java.util.Map;
 
 public class MailConfig extends BaseConfig<MailConfig> {
-    /**
-     * 服务器地址
-     */
+    /** 服务器地址 */
     private String host;
 
-    /**
-     * 端口
-     */
+    /** 端口 */
     private int port;
 
-    /**
-     * 邮件服务用户凭证
-     */
+    /** 邮件服务用户凭证 */
     private String username;
 
-    /**
-     * 邮件服务密码凭证
-     */
+    /** 邮件服务密码凭证 */
     private String password;
 
-    /**
-     * 可选 默认发件人邮箱
-     */
+    /** 可选 默认发件人邮箱 */
     private String fromAddress;
 
-    /**
-     * 可选 默认发件人名称
-     */
+    /** 可选 默认发件人名称 */
     private String fromPersonal;
 
-    /**
-     * 属性配置
-     */
+    /** 属性配置 */
     private Map<String, Object> properties;
 
     @Override

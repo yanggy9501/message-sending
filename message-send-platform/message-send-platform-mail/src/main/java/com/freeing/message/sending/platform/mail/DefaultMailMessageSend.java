@@ -1,13 +1,15 @@
 package com.freeing.message.sending.platform.mail;
 
-import com.freeing.message.sending.core.constants.SendChannel;
-import com.freeing.message.sending.core.exception.SendMessageException;
 import com.freeing.message.sending.core.MailMessage;
 import com.freeing.message.sending.core.MessageSend;
+import com.freeing.message.sending.core.constants.SendChannel;
+import com.freeing.message.sending.core.exception.SendMessageException;
 import com.freeing.message.sending.core.util.CollectionUtil;
 import com.freeing.message.sending.core.util.StrUtil;
+
 import jakarta.activation.DataSource;
 import jakarta.mail.internet.MimeMessage;
+
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -62,10 +64,12 @@ public class DefaultMailMessageSend implements MessageSend<MailMessage> {
     public void send(MailMessage sendMessage) {
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
-            boolean hasMultipart = CollectionUtil.isEmpty(sendMessage.getAttachments()) ||
-                    CollectionUtil.isEmpty(sendMessage.getInlineSources());
-            boolean isHtml = sendMessage.getContentType() != null &&
-                    sendMessage.getContentType().toLowerCase().contains(HTML);
+            boolean hasMultipart =
+                    CollectionUtil.isEmpty(sendMessage.getAttachments())
+                            || CollectionUtil.isEmpty(sendMessage.getInlineSources());
+            boolean isHtml =
+                    sendMessage.getContentType() != null
+                            && sendMessage.getContentType().toLowerCase().contains(HTML);
 
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, hasMultipart, UTF8);
@@ -120,5 +124,4 @@ public class DefaultMailMessageSend implements MessageSend<MailMessage> {
             throw new SendMessageException(e);
         }
     }
-
 }

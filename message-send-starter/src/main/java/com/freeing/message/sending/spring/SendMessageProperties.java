@@ -40,14 +40,10 @@ public class SendMessageProperties {
     }
 
     public static class BaseConfig {
-        /**
-         * 渠道平台
-         */
+        /** 渠道平台 */
         protected String platform;
 
-        /**
-         * 分组
-         */
+        /** 分组 */
         protected String group;
 
         public String getPlatform() {
@@ -68,9 +64,7 @@ public class SendMessageProperties {
     }
 
     public static class InAppConfig extends BaseConfig {
-        /**
-         * 启用
-         */
+        /** 启用 */
         private boolean enabled;
 
         public boolean isEnabled() {
@@ -83,39 +77,25 @@ public class SendMessageProperties {
     }
 
     public static class MailConfig extends BaseConfig {
-        /**
-         * 服务器地址
-         */
+        /** 服务器地址 */
         private String host;
 
-        /**
-         * 端口
-         */
+        /** 端口 */
         private int port;
 
-        /**
-         * 邮件服务用户凭证
-         */
+        /** 邮件服务用户凭证 */
         private String username;
 
-        /**
-         * 邮件服务密码凭证
-         */
+        /** 邮件服务密码凭证 */
         private String password;
 
-        /**
-         * 可选 默认发件人邮箱
-         */
+        /** 可选 默认发件人邮箱 */
         private String fromAddress;
 
-        /**
-         * 可选 默认发件人名称
-         */
+        /** 可选 默认发件人名称 */
         private String fromPersonal;
 
-        /**
-         * 属性配置
-         */
+        /** 属性配置 */
         private Map<String, Object> properties;
 
         public String getHost() {
@@ -179,10 +159,8 @@ public class SendMessageProperties {
         private String projectId;
 
         /**
-         * firebase 密钥
-         * 1. classpath:xxx/xxx-firebase.json
-         * 2. file:/xxx/xxx-firebase.json
-         * 3. json-string
+         * firebase 密钥 1. classpath:xxx/xxx-firebase.json 2. file:/xxx/xxx-firebase.json 3.
+         * json-string
          */
         private String privateKey;
 

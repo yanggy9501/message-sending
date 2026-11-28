@@ -10,10 +10,7 @@ public class FirebaseConfig extends BaseConfig<FirebaseConfig> {
     private String projectId;
 
     /**
-     * firebase 密钥
-     * 1. classpath:xxx/xxx-firebase.json
-     * 2. file:/xxx/xxx-firebase.json
-     * 3. json-string
+     * firebase 密钥 1. classpath:xxx/xxx-firebase.json 2. file:/xxx/xxx-firebase.json 3. json-string
      */
     private String privateKey;
 
@@ -45,4 +42,3 @@ public class FirebaseConfig extends BaseConfig<FirebaseConfig> {
         return this;
     }
 }
-

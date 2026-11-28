@@ -15,6 +15,7 @@ import com.freeing.message.sending.platform.firebase.DefaultFirebaseMessageSend;
 import com.freeing.message.sending.platform.firebase.FirebaseConfig;
 import com.freeing.message.sending.platform.mail.DefaultMailMessageSend;
 import com.freeing.message.sending.platform.mail.MailConfig;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -30,11 +31,9 @@ import java.util.concurrent.*;
 @EnableConfigurationProperties({SendMessageProperties.class, MessageTemplateProperties.class})
 public class MessageSendAutoConfig {
 
-    @Autowired
-    private SendMessageProperties sendMessageProperties;
+    @Autowired private SendMessageProperties sendMessageProperties;
 
-    @Autowired
-    private MessageTemplateProperties messageTemplateProperties;
+    @Autowired private MessageTemplateProperties messageTemplateProperties;
 
     public SendMessageProperties getSendMessageProperties() {
         return sendMessageProperties;
@@ -61,7 +60,8 @@ public class MessageSendAutoConfig {
     @Bean
     @ConditionalOnMissingBean(PlaceholderRender.class)
     public PlaceholderRender placeholderRender() {
-        MessageTemplateProperties.PlaceholderProperties properties = messageTemplateProperties.getPlaceholder();
+        MessageTemplateProperties.PlaceholderProperties properties =
+                messageTemplateProperties.getPlaceholder();
         if (properties != null) {
             return new PlaceholderRender(
                     properties.getSupportContentType(),
@@ -74,7 +74,8 @@ public class MessageSendAutoConfig {
     @Bean
     @ConditionalOnMissingBean(ThymeleafRender.class)
     public ThymeleafRender thymeleafRender() {
-        MessageTemplateProperties.ThymeleafProperties properties = messageTemplateProperties.getThymeleaf();
+        MessageTemplateProperties.ThymeleafProperties properties =
+                messageTemplateProperties.getThymeleaf();
         if (properties != null) {
             return new ThymeleafRender(properties.getSupportContentType());
         }
@@ -84,14 +85,17 @@ public class MessageSendAutoConfig {
     @Bean
     @ConditionalOnMissingBean(MessageTemplateLoader.class)
     public MessageTemplateLoader<BaseMessageTemplate, String> messageTemplateLoader() {
-        if (messageTemplateProperties.getLocal() != null && messageTemplateProperties.getLocal().isEnable()) {
+        if (messageTemplateProperties.getLocal() != null
+                && messageTemplateProperties.getLocal().isEnable()) {
             return new LocalTemplateLoader(messageTemplateProperties.getLocal().getPath());
         }
-        if (messageTemplateProperties.getClasspath() != null && messageTemplateProperties.getClasspath().isEnable()) {
+        if (messageTemplateProperties.getClasspath() != null
+                && messageTemplateProperties.getClasspath().isEnable()) {
             return new ClasspathTemplateLoader(messageTemplateProperties.getClasspath().getPath());
         }
-        throw new SendMessageException("Please config the bean MessageTemplateLoader " +
-                "or the properties MessageTemplateProperties");
+        throw new SendMessageException(
+                "Please config the bean MessageTemplateLoader "
+                        + "or the properties MessageTemplateProperties");
     }
 
     @Bean("com.freeing.message.sending.messageSendThreadPool")
@@ -103,8 +107,7 @@ public class MessageSendAutoConfig {
                 10,
                 TimeUnit.MINUTES,
                 new ArrayBlockingQueue<>(1000),
-                new ThreadPoolExecutor.AbortPolicy()
-        );
+                new ThreadPoolExecutor.AbortPolicy());
     }
 
     @Bean
@@ -114,21 +117,25 @@ public class MessageSendAutoConfig {
             @Autowired(required = false) List<MessageSendAspect> aspectList,
             @Autowired(required = false) MessageTemplateLoader<?, ?> messageTemplateLoader,
             @Autowired(required = false) LoadBalancer loadBalancer,
-            @Autowired @Qualifier("com.freeing.message.sending.messageSendThreadPool") ExecutorService threadPool) {
+            @Autowired @Qualifier("com.freeing.message.sending.messageSendThreadPool")
+                    ExecutorService threadPool) {
 
         MessageSendManager messageSendManager = new MessageSendManager();
         if (CollectionUtil.isNotEmpty(messageSends)) {
             messageSends.forEach(messageSendManager::register);
         }
-        List<? extends SendMessageProperties.FirebaseConfig> firebaseList = sendMessageProperties.getFirebase();
+        List<? extends SendMessageProperties.FirebaseConfig> firebaseList =
+                sendMessageProperties.getFirebase();
         if (CollectionUtil.isNotEmpty(firebaseList)) {
             for (SendMessageProperties.FirebaseConfig config : firebaseList) {
                 FirebaseConfig firebaseConfig = new FirebaseConfig();
-                firebaseConfig.setPlatform(config.getPlatform())
+                firebaseConfig
+                        .setPlatform(config.getPlatform())
                         .setGroup(config.getGroup())
                         .setProjectId(config.getProjectId())
                         .setPrivateKey(config.getPrivateKey());
-                DefaultFirebaseMessageSend firebaseMessageSend = new DefaultFirebaseMessageSend(firebaseConfig);
+                DefaultFirebaseMessageSend firebaseMessageSend =
+                        new DefaultFirebaseMessageSend(firebaseConfig);
                 messageSendManager.register(firebaseMessageSend);
             }
         }
@@ -137,7 +144,8 @@ public class MessageSendAutoConfig {
         if (CollectionUtil.isNotEmpty(mail)) {
             for (SendMessageProperties.MailConfig config : mail) {
                 MailConfig mailConfig = new MailConfig();
-                mailConfig.setPlatform(config.getPlatform())
+                mailConfig
+                        .setPlatform(config.getPlatform())
                         .setGroup(config.getGroup())
                         .setHost(config.getHost())
                         .setPort(config.getPort())

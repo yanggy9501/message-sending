@@ -9,72 +9,45 @@ import java.util.List;
 import java.util.Map;
 
 public class SendMessage implements Serializable {
-    @Serial
-    private static final long serialVersionUID = 1L;
+    @Serial private static final long serialVersionUID = 1L;
 
-    /**
-     * ID（主键）
-     */
+    /** ID（主键） */
     private String id;
 
-    /**
-     * 消息模版编码
-     */
+    /** 消息模版编码 */
     private String templateCode;
 
-    /**
-     * 消息标题/邮件主题/短信签名
-     */
+    /** 消息标题/邮件主题/短信签名 */
     private String msgName;
 
-    /**
-     * 消息内容
-     */
+    /** 消息内容 */
     private String msgContent;
 
-    /**
-     * 消息的内容格式 html/text
-     */
+    /** 消息的内容格式 html/text */
     private String contentType;
 
-    /**
-     * 发送渠道
-     */
+    /** 发送渠道 */
     private SendChannel sendChannel;
 
-    /**
-     * 分组
-     */
+    /** 分组 */
     private String group;
 
-    /**
-     * 消息的推送渠道
-     */
+    /** 消息的推送渠道 */
     private String platform;
 
-    /**
-     * 消息发送者
-     */
+    /** 消息发送者 */
     private String sendFrom;
 
-    /**
-     * 消息的接收者
-     */
+    /** 消息的接收者 */
     private List<String> sendTo;
 
-    /**
-     * 附加属性
-     */
+    /** 附加属性 */
     private Map<String, Object> attr;
 
-    /**
-     * 创建时间
-     */
+    /** 创建时间 */
     private Date startTime;
 
-    /**
-     * 结束时间
-     */
+    /** 结束时间 */
     private Date endTime;
 
     public String getId() {
@@ -183,20 +156,41 @@ public class SendMessage implements Serializable {
 
     @Override
     public String toString() {
-        return "SendMessage{" +
-                "id='" + id + '\'' +
-                ", templateCode='" + templateCode + '\'' +
-                ", msgName='" + msgName + '\'' +
-                ", msgContent='" + msgContent + '\'' +
-                ", contentType='" + contentType + '\'' +
-                ", sendChannel=" + sendChannel +
-                ", group='" + group + '\'' +
-                ", platform='" + platform + '\'' +
-                ", sendFrom='" + sendFrom + '\'' +
-                ", sendTo=" + sendTo +
-                ", attr=" + attr +
-                ", startTime=" + startTime +
-                ", endTime=" + endTime +
-                '}';
+        return "SendMessage{"
+                + "id='"
+                + id
+                + '\''
+                + ", templateCode='"
+                + templateCode
+                + '\''
+                + ", msgName='"
+                + msgName
+                + '\''
+                + ", msgContent='"
+                + msgContent
+                + '\''
+                + ", contentType='"
+                + contentType
+                + '\''
+                + ", sendChannel="
+                + sendChannel
+                + ", group='"
+                + group
+                + '\''
+                + ", platform='"
+                + platform
+                + '\''
+                + ", sendFrom='"
+                + sendFrom
+                + '\''
+                + ", sendTo="
+                + sendTo
+                + ", attr="
+                + attr
+                + ", startTime="
+                + startTime
+                + ", endTime="
+                + endTime
+                + '}';
     }
 }

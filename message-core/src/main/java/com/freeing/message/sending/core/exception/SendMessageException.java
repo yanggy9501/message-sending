@@ -17,7 +17,11 @@ public class SendMessageException extends RuntimeException {
         super(cause);
     }
 
-    protected SendMessageException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    protected SendMessageException(
+            String message,
+            Throwable cause,
+            boolean enableSuppression,
+            boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 }

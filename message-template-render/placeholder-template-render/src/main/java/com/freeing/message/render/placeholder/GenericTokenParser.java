@@ -1,8 +1,6 @@
 package com.freeing.message.render.placeholder;
 
-/**
- * 解析器：如 openToken=#{，closeToken=}
- */
+/** 解析器：如 openToken=#{，closeToken=} */
 public class GenericTokenParser {
 
     private final String openToken;
@@ -45,8 +43,7 @@ public class GenericTokenParser {
             if (start > 0 && src[start - 1] == '\\') {
                 builder.append(src, offset, start - offset - 1).append(openToken);
                 offset = start + openToken.length();
-            }
-            else {
+            } else {
                 if (expression == null) {
                     expression = new StringBuilder();
                 } else {
@@ -91,5 +88,4 @@ public class GenericTokenParser {
         }
         return builder.toString();
     }
-
 }

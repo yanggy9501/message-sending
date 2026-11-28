@@ -1,7 +1,7 @@
 package com.freeing.message.render.placeholder;
 
-import com.freeing.message.sending.core.constants.ContentType;
 import com.freeing.message.sending.core.MessageTemplateRender;
+import com.freeing.message.sending.core.constants.ContentType;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -20,7 +20,7 @@ public class PlaceholderRender implements MessageTemplateRender {
         }
         this.supportContentTypeSet.add(ContentType.TEXT_PLAIN);
         this.supportContentTypeSet.add(ContentType.PLAINTEXT);
-        if (openToken != null && closeToken !=  null) {
+        if (openToken != null && closeToken != null) {
             this.openToken = openToken;
             this.closeToken = closeToken;
         }
@@ -41,11 +41,15 @@ public class PlaceholderRender implements MessageTemplateRender {
 
     @Override
     public String render(String text, final Map<String, Object> variables) {
-        return new GenericTokenParser(this.openToken, this.closeToken, varName -> {
-            if (variables.containsKey(varName)) {
-                return variables.get(varName).toString();
-            }
-            return this.openToken + varName + this.closeToken;
-        }).parse(text);
+        return new GenericTokenParser(
+                        this.openToken,
+                        this.closeToken,
+                        varName -> {
+                            if (variables.containsKey(varName)) {
+                                return variables.get(varName).toString();
+                            }
+                            return this.openToken + varName + this.closeToken;
+                        })
+                .parse(text);
     }
 }

@@ -1,9 +1,9 @@
 package com.freeing.message.sending.core.manager;
 
 import com.freeing.message.sending.core.MessageSend;
+import com.freeing.message.sending.core.SendMessage;
 import com.freeing.message.sending.core.constants.SendChannel;
 import com.freeing.message.sending.core.exception.SendMessageException;
-import com.freeing.message.sending.core.SendMessage;
 import com.freeing.message.sending.core.util.StrUtil;
 
 import java.util.ArrayList;
@@ -13,8 +13,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class MessageSendManager {
-    private final Map<String /* platform */, MessageSend<?>> platformMessageSendMap = new HashMap<>();
-    private final Map<SendChannel, Map<String /* group */, List<MessageSend<?>>>> groupMessageSendMap = new HashMap<>();
+    private final Map<String /* platform */, MessageSend<?>> platformMessageSendMap =
+            new HashMap<>();
+    private final Map<SendChannel, Map<String /* group */, List<MessageSend<?>>>>
+            groupMessageSendMap = new HashMap<>();
 
     public synchronized void register(MessageSend<?> messageSend) {
         SendChannel sendChannel = messageSend.getSendChannel();
@@ -28,16 +30,18 @@ public class MessageSendManager {
             platformMessageSendMap.put(platform, messageSend);
         }
 
-        groupMessageSendMap.compute(sendChannel, (k, v) -> {
-            if (v == null) {
-                v = new HashMap<>();
-            }
-            if (!v.containsKey(group)) {
-                v.put(group, new ArrayList<>());
-            }
-            v.get(group).add(messageSend);
-            return v;
-        });
+        groupMessageSendMap.compute(
+                sendChannel,
+                (k, v) -> {
+                    if (v == null) {
+                        v = new HashMap<>();
+                    }
+                    if (!v.containsKey(group)) {
+                        v.put(group, new ArrayList<>());
+                    }
+                    v.get(group).add(messageSend);
+                    return v;
+                });
     }
 
     @SuppressWarnings("unchecked")
@@ -49,7 +53,8 @@ public class MessageSendManager {
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends SendMessage> List<MessageSend<T>> getByGroup(SendChannel channel, String group) {
+    public <T extends SendMessage> List<MessageSend<T>> getByGroup(
+            SendChannel channel, String group) {
         if (groupMessageSendMap.containsKey(channel)) {
             if (groupMessageSendMap.get(channel).containsKey(group)) {
                 List<?> rawList = groupMessageSendMap.get(channel).get(group);

@@ -22,12 +22,13 @@ public class MessageSendService {
 
     private final ExecutorService threadPool;
 
-    public MessageSendService(MessageSendManager messageSendManager,
-                              List<MessageTemplateRender> messageTemplateRenders,
-                              MessageTemplateLoader<? extends BaseMessageTemplate, ?> messageTemplateLoader,
-                              LoadBalancer loadBalancer,
-                              List<MessageSendAspect> aspectList,
-                              ExecutorService threadPool) {
+    public MessageSendService(
+            MessageSendManager messageSendManager,
+            List<MessageTemplateRender> messageTemplateRenders,
+            MessageTemplateLoader<? extends BaseMessageTemplate, ?> messageTemplateLoader,
+            LoadBalancer loadBalancer,
+            List<MessageSendAspect> aspectList,
+            ExecutorService threadPool) {
         this.messageSendManager = messageSendManager;
         this.messageTemplateRenders = messageTemplateRenders;
         this.messageTemplateLoader = messageTemplateLoader;

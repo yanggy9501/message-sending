@@ -1,32 +1,24 @@
 package com.freeing.message.sending.core;
 
+import jakarta.activation.DataSource;
+
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
-import jakarta.activation.DataSource;
 
 public class MailMessage extends SendMessage implements Serializable {
-    @Serial
-    private static final long serialVersionUID = 1L;
+    @Serial private static final long serialVersionUID = 1L;
 
-    /**
-     * 抄送
-     */
+    /** 抄送 */
     private List<String> cc;
 
-    /**
-     * 秘抄
-     */
+    /** 秘抄 */
     private List<String> bcc;
 
-    /**
-     * 附件
-     */
+    /** 附件 */
     private List<DataSource> attachments;
 
-    /**
-     * 内嵌资源
-     */
+    /** 内嵌资源 */
     private List<DataSource> inlineSources;
 
     public List<String> getCc() {

@@ -6,34 +6,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MailTarget extends Target {
-    /**
-     * 发送人邮箱地址
-     */
+    /** 发送人邮箱地址 */
     private String from;
 
-    /**
-     * 接收送人邮箱地址
-     */
+    /** 接收送人邮箱地址 */
     private List<String> to;
 
-    /**
-     * 抄送
-     */
+    /** 抄送 */
     private List<String> cc;
 
-    /**
-     * 秘抄
-     */
+    /** 秘抄 */
     private List<String> bcc;
 
-    /**
-     * 附件
-     */
+    /** 附件 */
     private List<DataSource> attachments;
 
-    /**
-     * 内嵌资源
-     */
+    /** 内嵌资源 */
     private List<DataSource> inlineSources;
 
     public String getFrom() {

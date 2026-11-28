@@ -1,8 +1,8 @@
 package com.freeing.message.loader.local;
 
 import com.freeing.message.sending.core.BaseMessageTemplate;
-import com.freeing.message.sending.core.exception.SendMessageException;
 import com.freeing.message.sending.core.MessageTemplateLoader;
+import com.freeing.message.sending.core.exception.SendMessageException;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -14,10 +14,10 @@ import java.util.List;
 import java.util.Properties;
 
 public class LocalTemplateLoader implements MessageTemplateLoader<BaseMessageTemplate, String> {
-    private final static String TEMPLATE_SUFFIX_HTML = "_template.html";
-    private final static String TEMPLATE_SUFFIX_TXT = "_template.txt";
-    private final static String TEMPLATE_SUFFIX_NULL = "_template";
-    private final static String CONFIG_SUFFIX = "_config.properties";
+    private static final String TEMPLATE_SUFFIX_HTML = "_template.html";
+    private static final String TEMPLATE_SUFFIX_TXT = "_template.txt";
+    private static final String TEMPLATE_SUFFIX_NULL = "_template";
+    private static final String CONFIG_SUFFIX = "_config.properties";
 
     private final String path;
 
@@ -32,7 +32,8 @@ public class LocalTemplateLoader implements MessageTemplateLoader<BaseMessageTem
         try (InputStream inputStream = new FileInputStream(configPath.toFile())) {
             configProp.load(inputStream);
         } catch (Exception e) {
-            throw new SendMessageException("Error loading template config-file: " + configPath.toAbsolutePath(), e);
+            throw new SendMessageException(
+                    "Error loading template config-file: " + configPath.toAbsolutePath(), e);
         }
         String contentType = configProp.getProperty("contentType");
         String supportChannels = configProp.getProperty("supportChannels");
@@ -45,7 +46,8 @@ public class LocalTemplateLoader implements MessageTemplateLoader<BaseMessageTem
         messageTemplate.setMsgName(msgName);
 
         boolean findTmeplateFile = false;
-        List<String> templateSuffixList = Arrays.asList(TEMPLATE_SUFFIX_HTML, TEMPLATE_SUFFIX_TXT, TEMPLATE_SUFFIX_NULL);
+        List<String> templateSuffixList =
+                Arrays.asList(TEMPLATE_SUFFIX_HTML, TEMPLATE_SUFFIX_TXT, TEMPLATE_SUFFIX_NULL);
         for (String suffix : templateSuffixList) {
             Path templatePath = Path.of(path, templateCode + suffix);
             if (Files.exists(templatePath)) {
@@ -55,12 +57,14 @@ public class LocalTemplateLoader implements MessageTemplateLoader<BaseMessageTem
                     findTmeplateFile = true;
                     break;
                 } catch (Exception e) {
-                    throw new SendMessageException("Error loading template-file: " + templatePath.toAbsolutePath(), e);
+                    throw new SendMessageException(
+                            "Error loading template-file: " + templatePath.toAbsolutePath(), e);
                 }
             }
         }
         if (!findTmeplateFile) {
-            throw new SendMessageException("No template file found for template-code: " + templateCode);
+            throw new SendMessageException(
+                    "No template file found for template-code: " + templateCode);
         }
         return messageTemplate;
     }

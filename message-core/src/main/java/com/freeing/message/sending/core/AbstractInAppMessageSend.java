@@ -7,8 +7,7 @@ import com.freeing.message.sending.core.constants.SendChannel;
  */
 public abstract class AbstractInAppMessageSend<T> implements MessageSend<InAppMessage<T>> {
 
-    public AbstractInAppMessageSend() {
-    }
+    public AbstractInAppMessageSend() {}
 
     @Override
     public SendChannel getSendChannel() {

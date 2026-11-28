@@ -37,10 +37,16 @@ public class TransInfo {
 
     @Override
     public String toString() {
-        return "TransInfo{" +
-                "id='" + id + '\'' +
-                ", transNo='" + transNo + '\'' +
-                ", amount='" + amount + '\'' +
-                '}';
+        return "TransInfo{"
+                + "id='"
+                + id
+                + '\''
+                + ", transNo='"
+                + transNo
+                + '\''
+                + ", amount='"
+                + amount
+                + '\''
+                + '}';
     }
 }

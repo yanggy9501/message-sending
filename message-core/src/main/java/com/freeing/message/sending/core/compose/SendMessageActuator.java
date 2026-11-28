@@ -1,13 +1,14 @@
 package com.freeing.message.sending.core.compose;
 
 import com.freeing.message.sending.core.*;
+import com.freeing.message.sending.core.MessageTemplateLoader;
+import com.freeing.message.sending.core.MessageTemplateRender;
 import com.freeing.message.sending.core.aspect.MessageSeedAspectChain;
 import com.freeing.message.sending.core.constants.ContentType;
 import com.freeing.message.sending.core.constants.SendChannel;
 import com.freeing.message.sending.core.exception.SendMessageException;
-import com.freeing.message.sending.core.MessageTemplateLoader;
-import com.freeing.message.sending.core.MessageTemplateRender;
 import com.freeing.message.sending.core.util.StrUtil;
+
 import org.springframework.core.ResolvableType;
 
 import java.util.*;
@@ -24,16 +25,20 @@ public class SendMessageActuator {
     public void execute(boolean isAsync) {
         final Date startDate = new Date();
         Map<SendChannel, Map.Entry<String, String>> channels = this.pretreatment.getChannels();
-        for (Map.Entry<SendChannel, Map.Entry<String /*group*/, String /*platform*/>> channelEntry : channels.entrySet()) {
+        for (Map.Entry<SendChannel, Map.Entry<String /*group*/, String /*platform*/>> channelEntry :
+                channels.entrySet()) {
             if (isAsync) {
-                this.sendService.getThreadPool().execute(() -> executeChannel(channelEntry, startDate));
+                this.sendService
+                        .getThreadPool()
+                        .execute(() -> executeChannel(channelEntry, startDate));
             } else {
                 executeChannel(channelEntry, startDate);
             }
         }
     }
 
-    private void executeChannel(Map.Entry<SendChannel, Map.Entry<String, String>> entry, Date startDate) {
+    private void executeChannel(
+            Map.Entry<SendChannel, Map.Entry<String, String>> entry, Date startDate) {
         final SendChannel channel = entry.getKey();
         if (channel == null) {
             throw new NullPointerException("SendChannel is null");
@@ -49,7 +54,8 @@ public class SendMessageActuator {
         // Get MessageSend of channel
         List<MessageSend<SendMessage>> messageSends;
         if (StrUtil.isNotEmpty(platform)) {
-            MessageSend<SendMessage> messageSend = this.sendService.getMessageSendManager().getByPlatform(platform);
+            MessageSend<SendMessage> messageSend =
+                    this.sendService.getMessageSendManager().getByPlatform(platform);
             messageSends = Collections.singletonList(messageSend);
         } else {
             messageSends = this.sendService.getMessageSendManager().getByGroup(channel, group);
@@ -74,30 +80,35 @@ public class SendMessageActuator {
         doSendWithAspect(channel, messageSends, sendMessage, messageTemplate);
     }
 
-    private void doSendWithAspect(SendChannel channel,
-                                  List<MessageSend<SendMessage>> messageSends,
-                                  SendMessage sendMessage,
-                                  BaseMessageTemplate messageTemplate) {
-        new MessageSeedAspectChain(this.sendService.getAspectList().iterator(),
-                (_sendMessage, _messageTemplate) -> {
-                    MessageSend<SendMessage> finalMessageSend;
-                    // IN-App has generic type, having to spec doing.
-                    if (channel == SendChannel.IN_APP) {
-                        // 查找类型匹配的站内信 MessageSend
-                        finalMessageSend = getInAppMessageSend(messageSends, (InAppMessage<?>) _sendMessage);
-                    } else {
-                        finalMessageSend = this.sendService.getLoadBalancer().getServer(messageSends);
-                    }
-                    if (finalMessageSend == null) {
-                        throw new SendMessageException("No found MessageSend");
-                    }
-                    _sendMessage.setPlatform(finalMessageSend.getPlatform());
-                    _sendMessage.setGroup(finalMessageSend.getGroup());
-                    // seed message
-                    finalMessageSend.send(_sendMessage);
-                    _sendMessage.setEndTime(new Date());
-                }
-        ).next(sendMessage, messageTemplate, new HashMap<>());
+    private void doSendWithAspect(
+            SendChannel channel,
+            List<MessageSend<SendMessage>> messageSends,
+            SendMessage sendMessage,
+            BaseMessageTemplate messageTemplate) {
+        new MessageSeedAspectChain(
+                        this.sendService.getAspectList().iterator(),
+                        (_sendMessage, _messageTemplate) -> {
+                            MessageSend<SendMessage> finalMessageSend;
+                            // IN-App has generic type, having to spec doing.
+                            if (channel == SendChannel.IN_APP) {
+                                // 查找类型匹配的站内信 MessageSend
+                                finalMessageSend =
+                                        getInAppMessageSend(
+                                                messageSends, (InAppMessage<?>) _sendMessage);
+                            } else {
+                                finalMessageSend =
+                                        this.sendService.getLoadBalancer().getServer(messageSends);
+                            }
+                            if (finalMessageSend == null) {
+                                throw new SendMessageException("No found MessageSend");
+                            }
+                            _sendMessage.setPlatform(finalMessageSend.getPlatform());
+                            _sendMessage.setGroup(finalMessageSend.getGroup());
+                            // seed message
+                            finalMessageSend.send(_sendMessage);
+                            _sendMessage.setEndTime(new Date());
+                        })
+                .next(sendMessage, messageTemplate, new HashMap<>());
     }
 
     private static MessageSend<SendMessage> getInAppMessageSend(
@@ -105,26 +116,29 @@ public class SendMessageActuator {
         Object data = null;
         for (MessageSend<SendMessage> messageSend : messageSends) {
             data = _sendMessage.getData();
-            ResolvableType inputResolvableType = data != null ?
-                    ResolvableType.forInstance(data) :
-                    ResolvableType.forClass(Void.class);
+            ResolvableType inputResolvableType =
+                    data != null
+                            ? ResolvableType.forInstance(data)
+                            : ResolvableType.forClass(Void.class);
             ResolvableType specMessageSendResolvableType =
-                    ResolvableType.forClass(messageSend.getClass()).as(AbstractInAppMessageSend.class);
+                    ResolvableType.forClass(messageSend.getClass())
+                            .as(AbstractInAppMessageSend.class);
             ResolvableType genericResolvableType = specMessageSendResolvableType.getGeneric(0);
             if (genericResolvableType.isAssignableFrom(inputResolvableType)) {
                 return messageSend;
             }
         }
-        String errorMsg = "No such the subclass-AbstractInAppMessageSend<" +
-                (data == null ? "Void" : data.getClass()) + ">";
+        String errorMsg =
+                "No such the subclass-AbstractInAppMessageSend<"
+                        + (data == null ? "Void" : data.getClass())
+                        + ">";
         throw new SendMessageException(errorMsg);
     }
 
     private SendMessage buildChannelSendMessage(SendChannel channel) {
         if (channel == SendChannel.MAIL) {
             return buildMailSendMessage();
-        }
-        else if (channel == SendChannel.IN_APP) {
+        } else if (channel == SendChannel.IN_APP) {
             InAppMessage<Object> sendMessage = new InAppMessage<>();
             List<Target> targets = pretreatment.getTargets();
             for (Target target : targets) {
@@ -136,8 +150,7 @@ public class SendMessageActuator {
                 }
             }
             return sendMessage;
-        }
-        else if (channel == SendChannel.PUSH) {
+        } else if (channel == SendChannel.PUSH) {
             PushMessage pushMessage = new PushMessage();
             List<Target> targets = pretreatment.getTargets();
             for (Target target : targets) {
@@ -147,8 +160,7 @@ public class SendMessageActuator {
                     pushMessage.setData(pushTarget.getData());
                 }
             }
-        }
-        else if (channel == SendChannel.SMS) {
+        } else if (channel == SendChannel.SMS) {
 
         }
         throw new SendMessageException("unknown channel: " + pretreatment.getChannels());
@@ -184,7 +196,8 @@ public class SendMessageActuator {
     }
 
     private void renderTemplate(SendMessage sendMessage, BaseMessageTemplate messageTemplate) {
-        List<MessageTemplateRender> messageTemplateRenders = this.sendService.getMessageTemplateRenders();
+        List<MessageTemplateRender> messageTemplateRenders =
+                this.sendService.getMessageTemplateRenders();
         boolean renderNameFlag = false;
         boolean renderContentFlag = false;
         for (MessageTemplateRender templateRender : messageTemplateRenders) {
@@ -193,27 +206,33 @@ public class SendMessageActuator {
             sendMessage.setContentType(contentType);
             if (templateRender.isSupport(contentType)) {
                 String msgContent =
-                        templateRender.render(messageTemplate.getMsgContent(), this.pretreatment.getVariables());
+                        templateRender.render(
+                                messageTemplate.getMsgContent(), this.pretreatment.getVariables());
                 sendMessage.setMsgContent(msgContent);
                 renderNameFlag = true;
             }
             // 渲染消息主题-纯文本渲染
             if (templateRender.isSupport(ContentType.TEXT_PLAIN)) {
-                String msgName = templateRender.render(messageTemplate.getMsgName(),
-                        this.pretreatment.getVariables());
+                String msgName =
+                        templateRender.render(
+                                messageTemplate.getMsgName(), this.pretreatment.getVariables());
                 sendMessage.setMsgName(msgName);
                 renderContentFlag = true;
             }
         }
         if (!renderNameFlag || !renderContentFlag) {
-            throw new SendMessageException("No found template render for ContentType: " + messageTemplate.getContentType());
+            throw new SendMessageException(
+                    "No found template render for ContentType: "
+                            + messageTemplate.getContentType());
         }
     }
 
-    private void checkTemplateIfSupportTheChannel(SendChannel channel, BaseMessageTemplate messageTemplate) {
+    private void checkTemplateIfSupportTheChannel(
+            SendChannel channel, BaseMessageTemplate messageTemplate) {
         String supportChannelStr = messageTemplate.getSupportChannels();
         if (StrUtil.isEmpty(supportChannelStr)) {
-            throw new SendMessageException("Template supportChannels is null: " + this.pretreatment.getTemplate());
+            throw new SendMessageException(
+                    "Template supportChannels is null: " + this.pretreatment.getTemplate());
         }
         String[] supportChannelArr = supportChannelStr.split(",");
         boolean isSupport = false;
@@ -226,27 +245,32 @@ public class SendMessageActuator {
             }
         }
         if (!isSupport) {
-            throw new SendMessageException("The template [" + messageTemplate.getTemplateCode()
-                    + "] no support the channel: " + channel.name());
+            throw new SendMessageException(
+                    "The template ["
+                            + messageTemplate.getTemplateCode()
+                            + "] no support the channel: "
+                            + channel.name());
         }
     }
 
     private BaseMessageTemplate getMessageTemplate() {
         @SuppressWarnings("unchecked")
         MessageTemplateLoader<? extends BaseMessageTemplate, Object> messageTemplateLoader =
-                (MessageTemplateLoader<? extends BaseMessageTemplate, Object>) this.sendService.getMessageTemplateLoader();
+                (MessageTemplateLoader<? extends BaseMessageTemplate, Object>)
+                        this.sendService.getMessageTemplateLoader();
         // 类型检查：加载器的入参数 == 输入参数
         ResolvableType loaderResolvableType =
                 ResolvableType.forInstance(messageTemplateLoader).as(MessageTemplateLoader.class);
         ResolvableType specLoaderInGeneric = loaderResolvableType.getGeneric(1);
         Object templateParam = this.pretreatment.getTemplate();
-        ResolvableType inputResolvableType =
-                ResolvableType.forInstance(templateParam);
+        ResolvableType inputResolvableType = ResolvableType.forInstance(templateParam);
         if (!specLoaderInGeneric.isAssignableFrom(inputResolvableType)) {
-            throw new SendMessageException("The type of MessageTemplateLoader.loadTemplate<" +
-                    specLoaderInGeneric.getRawClass() +
-                    "> no match the type of SendService.of(" + templateParam.getClass() +
-                    ")");
+            throw new SendMessageException(
+                    "The type of MessageTemplateLoader.loadTemplate<"
+                            + specLoaderInGeneric.getRawClass()
+                            + "> no match the type of SendService.of("
+                            + templateParam.getClass()
+                            + ")");
         }
         BaseMessageTemplate messageTemplate = messageTemplateLoader.loadTemplate(templateParam);
         if (Objects.isNull(messageTemplate)) {

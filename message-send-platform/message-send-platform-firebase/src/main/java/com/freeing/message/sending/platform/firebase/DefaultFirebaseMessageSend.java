@@ -40,11 +40,13 @@ public class DefaultFirebaseMessageSend implements MessageSend<PushMessage> {
             String classpath = privateKey.substring(FirebaseConfig.PREFIX_CLASSPATH.length());
             try (InputStream in = this.getClass().getResourceAsStream(classpath)) {
                 if (in == null) {
-                    throw new SendMessageException("Firebase classpath resource not found: " + classpath);
+                    throw new SendMessageException(
+                            "Firebase classpath resource not found: " + classpath);
                 }
-                FirebaseOptions options = FirebaseOptions.builder()
-                        .setCredentials(GoogleCredentials.fromStream(in))
-                        .build();
+                FirebaseOptions options =
+                        FirebaseOptions.builder()
+                                .setCredentials(GoogleCredentials.fromStream(in))
+                                .build();
                 FirebaseApp firebaseApp = FirebaseApp.initializeApp(options, this.projectId);
                 this.instance = FirebaseMessaging.getInstance(firebaseApp);
             } catch (Exception e) {
@@ -53,19 +55,23 @@ public class DefaultFirebaseMessageSend implements MessageSend<PushMessage> {
         } else if (privateKey.startsWith(FirebaseConfig.PREFIX_FILE)) {
             String filePath = privateKey.substring(FirebaseConfig.PREFIX_FILE.length());
             try (InputStream in = new FileInputStream(filePath)) {
-                FirebaseOptions options = FirebaseOptions.builder()
-                        .setCredentials(GoogleCredentials.fromStream(in))
-                        .build();
+                FirebaseOptions options =
+                        FirebaseOptions.builder()
+                                .setCredentials(GoogleCredentials.fromStream(in))
+                                .build();
                 FirebaseApp firebaseApp = FirebaseApp.initializeApp(options, this.projectId);
                 this.instance = FirebaseMessaging.getInstance(firebaseApp);
             } catch (Exception e) {
                 throw new SendMessageException(e);
             }
         } else {
-            try (InputStream in = new ByteArrayInputStream(config.getPrivateKey().getBytes(StandardCharsets.UTF_8))) {
-                FirebaseOptions options = FirebaseOptions.builder()
-                        .setCredentials(GoogleCredentials.fromStream(in))
-                        .build();
+            try (InputStream in =
+                    new ByteArrayInputStream(
+                            config.getPrivateKey().getBytes(StandardCharsets.UTF_8))) {
+                FirebaseOptions options =
+                        FirebaseOptions.builder()
+                                .setCredentials(GoogleCredentials.fromStream(in))
+                                .build();
                 FirebaseApp firebaseApp = FirebaseApp.initializeApp(options, this.projectId);
                 this.instance = FirebaseMessaging.getInstance(firebaseApp);
             } catch (Exception e) {
@@ -107,34 +113,38 @@ public class DefaultFirebaseMessageSend implements MessageSend<PushMessage> {
         String clickAction = pushMessage.getClickAction();
         Map<String, String> data = pushMessage.getData();
 
-        AndroidConfig androidConfig = AndroidConfig.builder()
-                .setNotification(AndroidNotification.builder()
-                        .setClickAction(clickAction)
-                        .setImage(imageUrl)
-                        .build())
-                .build();
+        AndroidConfig androidConfig =
+                AndroidConfig.builder()
+                        .setNotification(
+                                AndroidNotification.builder()
+                                        .setClickAction(clickAction)
+                                        .setImage(imageUrl)
+                                        .build())
+                        .build();
 
-        ApnsConfig apnsConfig = ApnsConfig.builder()
-                .setAps(Aps.builder()
-                        .setBadge(0)
-                        .setCategory(clickAction)
-                        .setMutableContent(true)
-                        .setAlert(ApsAlert.builder()
-                                .setTitle(title)
-                                .setBody(body)
-                                .build())
-                        .build())
-                .putHeader("apns-priority", "10")
-                .build();
+        ApnsConfig apnsConfig =
+                ApnsConfig.builder()
+                        .setAps(
+                                Aps.builder()
+                                        .setBadge(0)
+                                        .setCategory(clickAction)
+                                        .setMutableContent(true)
+                                        .setAlert(
+                                                ApsAlert.builder()
+                                                        .setTitle(title)
+                                                        .setBody(body)
+                                                        .build())
+                                        .build())
+                        .putHeader("apns-priority", "10")
+                        .build();
 
-        MulticastMessage.Builder messageBuilder = MulticastMessage.builder()
-                .addAllTokens(tokens)
-                .setNotification(Notification.builder()
-                        .setTitle(title)
-                        .setBody(body)
-                        .build())
-                .setAndroidConfig(androidConfig)
-                .setApnsConfig(apnsConfig);
+        MulticastMessage.Builder messageBuilder =
+                MulticastMessage.builder()
+                        .addAllTokens(tokens)
+                        .setNotification(
+                                Notification.builder().setTitle(title).setBody(body).build())
+                        .setAndroidConfig(androidConfig)
+                        .setApnsConfig(apnsConfig);
 
         if (data != null && !data.isEmpty()) {
             messageBuilder.putAllData(data);

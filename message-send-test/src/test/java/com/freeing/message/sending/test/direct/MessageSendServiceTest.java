@@ -6,19 +6,21 @@ import com.freeing.message.sending.core.BaseMessageTemplate;
 import com.freeing.message.sending.core.InAppTarget;
 import com.freeing.message.sending.core.MailTarget;
 import com.freeing.message.sending.core.MessageSendService;
+import com.freeing.message.sending.core.MessageTemplateLoader;
+import com.freeing.message.sending.core.MessageTemplateRender;
 import com.freeing.message.sending.core.aspect.MessageSendAspect;
 import com.freeing.message.sending.core.constants.SendChannel;
 import com.freeing.message.sending.core.loadbalancer.LoadBalancer;
 import com.freeing.message.sending.core.loadbalancer.RandomLoadBalancer;
 import com.freeing.message.sending.core.manager.MessageSendManager;
-import com.freeing.message.sending.core.MessageTemplateLoader;
-import com.freeing.message.sending.core.MessageTemplateRender;
 import com.freeing.message.sending.platform.mail.DefaultMailMessageSend;
 import com.freeing.message.sending.platform.mail.MailConfig;
 import com.freeing.message.sending.test.aspect.LogIntercptor;
 import com.freeing.message.sending.test.inapp.InAppMessageSend;
 import com.freeing.message.sending.test.inapp.bean.TransInfo;
+
 import jakarta.activation.FileDataSource;
+
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -34,28 +36,33 @@ public class MessageSendServiceTest {
         MessageSendManager messageSendManager = new MessageSendManager();
         messageSendManager.register(new InAppMessageSend());
         List<MessageTemplateRender> messageTemplateRenders = new ArrayList<>();
-        MessageTemplateLoader<? extends BaseMessageTemplate, ?> messageTemplateLoader = new LocalTemplateLoader("~/tmp/msg");
+        MessageTemplateLoader<? extends BaseMessageTemplate, ?> messageTemplateLoader =
+                new LocalTemplateLoader("~/tmp/msg");
         LoadBalancer loadBalancer = new RandomLoadBalancer();
         List<MessageSendAspect> aspectList = new ArrayList<>();
-        MessageSendService sendService = new MessageSendService(messageSendManager,
-                messageTemplateRenders,
-                messageTemplateLoader,
-                loadBalancer,
-                aspectList,
-                Executors.newFixedThreadPool(10));
+        MessageSendService sendService =
+                new MessageSendService(
+                        messageSendManager,
+                        messageTemplateRenders,
+                        messageTemplateLoader,
+                        loadBalancer,
+                        aspectList,
+                        Executors.newFixedThreadPool(10));
 
-        sendService.of("hello test-inapp", "this is test inapp content: transNo=#{transNo}, amount=#{amount}")
+        sendService
+                .of(
+                        "hello test-inapp",
+                        "this is test inapp content: transNo=#{transNo}, amount=#{amount}")
                 .channel(SendChannel.IN_APP)
-                .addTarget(new InAppTarget()
-                        .setPublisher("p-user1")
-                        .addReceiver("r-user1")
-                        .addReceiver("r-user2")
-                )
+                .addTarget(
+                        new InAppTarget()
+                                .setPublisher("p-user1")
+                                .addReceiver("r-user1")
+                                .addReceiver("r-user2"))
                 .variables(Map.of("transNo", "FX2026", "amount", "10.00"))
                 .putAttr("k1", "v1")
                 .putAttr("k2", "v2")
                 .syncSend();
-
     }
 
     @Test
@@ -63,26 +70,29 @@ public class MessageSendServiceTest {
         MessageSendManager messageSendManager = new MessageSendManager();
         messageSendManager.register(new InAppMessageSend());
         List<MessageTemplateRender> messageTemplateRenders = new ArrayList<>();
-        messageTemplateRenders.add(new PlaceholderRender(new String[]{"text"}));
+        messageTemplateRenders.add(new PlaceholderRender(new String[] {"text"}));
         MessageTemplateLoader<? extends BaseMessageTemplate, ?> messageTemplateLoader =
                 new LocalTemplateLoader("src/test/local-template");
         LoadBalancer loadBalancer = new RandomLoadBalancer();
         List<MessageSendAspect> aspectList = new ArrayList<>();
         aspectList.add(new LogIntercptor());
-        MessageSendService sendService = new MessageSendService(messageSendManager,
-                messageTemplateRenders,
-                messageTemplateLoader,
-                loadBalancer,
-                aspectList,
-                Executors.newFixedThreadPool(10));
+        MessageSendService sendService =
+                new MessageSendService(
+                        messageSendManager,
+                        messageTemplateRenders,
+                        messageTemplateLoader,
+                        loadBalancer,
+                        aspectList,
+                        Executors.newFixedThreadPool(10));
 
-        sendService.of("trans_issue")
+        sendService
+                .of("trans_issue")
                 .channel(SendChannel.IN_APP)
-                .addTarget(new InAppTarget()
-                        .setPublisher("p-user1")
-                        .addReceiver("r-user1")
-                        .addReceiver("r-user2")
-                )
+                .addTarget(
+                        new InAppTarget()
+                                .setPublisher("p-user1")
+                                .addReceiver("r-user1")
+                                .addReceiver("r-user2"))
                 .variables(Map.of("transType", "ISSUE", "amount", "10.00", "status", "success"))
                 .putAttr("k1", "v1")
                 .putAttr("k2", "v2")
@@ -101,7 +111,8 @@ public class MessageSendServiceTest {
         map.put("mail.smtp.ssl.enable", "true");
         map.put("mail.smtp.protocol", "smtps");
         MailConfig mailConfig = new MailConfig();
-        mailConfig.setHost("smtp.qq.com")
+        mailConfig
+                .setHost("smtp.qq.com")
                 .setPort(465)
                 // todo
                 .setUsername("your-mail@qq.com")
@@ -113,37 +124,41 @@ public class MessageSendServiceTest {
         messageSendManager.register(mailMessageSend);
 
         List<MessageTemplateRender> messageTemplateRenders = new ArrayList<>();
-        messageTemplateRenders.add(new PlaceholderRender(new String[]{"text"}));
+        messageTemplateRenders.add(new PlaceholderRender(new String[] {"text"}));
         MessageTemplateLoader<? extends BaseMessageTemplate, ?> messageTemplateLoader =
                 new LocalTemplateLoader("message-send-test/src/test/local-template");
         LoadBalancer loadBalancer = new RandomLoadBalancer();
         List<MessageSendAspect> aspectList = new ArrayList<>();
-        MessageSendService sendService = new MessageSendService(messageSendManager,
-                messageTemplateRenders,
-                messageTemplateLoader,
-                loadBalancer,
-                aspectList,
-                Executors.newFixedThreadPool(10));
+        MessageSendService sendService =
+                new MessageSendService(
+                        messageSendManager,
+                        messageTemplateRenders,
+                        messageTemplateLoader,
+                        loadBalancer,
+                        aspectList,
+                        Executors.newFixedThreadPool(10));
 
-        sendService.of("trans_issue")
+        sendService
+                .of("trans_issue")
                 .channel(SendChannel.IN_APP, SendChannel.MAIL)
                 // data数据不兼容：in-app,push等透彻的不一样
-                .addTarget(new InAppTarget()
-                        .setPublisher("p-user1")
-                        .addReceiver("r-user1")
-                        .addReceiver("r-user2")
-                        .setData(new TransInfo("1", "FX2026", "10.00"))
-                )
-                .addTarget(new MailTarget()
-                        .setFrom("your-mail@qq.com")
-                        .setTo(List.of("your-mail@qq.com"))
-                        .setCc(List.of("your-mail@qq.com"))
-                        .addAttachment(new FileDataSource("message-send-test/src/test/local-template/trans_issue_template.txt"))
-                )
+                .addTarget(
+                        new InAppTarget()
+                                .setPublisher("p-user1")
+                                .addReceiver("r-user1")
+                                .addReceiver("r-user2")
+                                .setData(new TransInfo("1", "FX2026", "10.00")))
+                .addTarget(
+                        new MailTarget()
+                                .setFrom("your-mail@qq.com")
+                                .setTo(List.of("your-mail@qq.com"))
+                                .setCc(List.of("your-mail@qq.com"))
+                                .addAttachment(
+                                        new FileDataSource(
+                                                "message-send-test/src/test/local-template/trans_issue_template.txt")))
                 .variables(Map.of("transType", "ISSUE", "amount", "10.00", "status", "success"))
                 .putAttr("k1", "v1")
                 .putAttr("k2", "v2")
                 .asyncSend();
     }
-
 }

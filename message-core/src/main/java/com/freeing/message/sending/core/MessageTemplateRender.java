@@ -2,9 +2,7 @@ package com.freeing.message.sending.core;
 
 import java.util.Map;
 
-/**
- * 模版渲染
- */
+/** 模版渲染 */
 public interface MessageTemplateRender {
 
     /**

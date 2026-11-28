@@ -2,6 +2,7 @@ package com.freeing.message.render.thymeleaf;
 
 import com.freeing.message.sending.core.MessageTemplateRender;
 import com.freeing.message.sending.core.constants.ContentType;
+
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 

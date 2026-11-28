@@ -1,9 +1,7 @@
 package com.freeing.message.sending.core.util;
 
 public class StrUtil {
-    private StrUtil() {
-
-    }
+    private StrUtil() {}
 
     public static boolean isEmpty(String str) {
         return str == null || str.isEmpty();
