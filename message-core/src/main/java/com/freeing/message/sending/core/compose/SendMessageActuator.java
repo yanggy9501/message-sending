@@ -80,32 +80,11 @@ public class SendMessageActuator {
                                   BaseMessageTemplate messageTemplate) {
         new MessageSeedAspectChain(this.sendService.getAspectList().iterator(),
                 (_sendMessage, _messageTemplate) -> {
-                    MessageSend<SendMessage> finalMessageSend = null;
+                    MessageSend<SendMessage> finalMessageSend;
                     // IN-App has generic type, having to spec doing.
                     if (channel == SendChannel.IN_APP) {
                         // 查找类型匹配的站内信 MessageSend
-                        boolean findFlag = false;
-                        Object data = null;
-                        for (MessageSend<SendMessage> messageSend : messageSends) {
-                            data = ((InAppMessage<?>) _sendMessage).getData();
-                            ResolvableType inputResolvableType = data != null ?
-                                    ResolvableType.forInstance(data) :
-                                    ResolvableType.forClass(Void.class);
-                            ResolvableType specMessageSendResolvableType =
-                                    ResolvableType.forClass(messageSend.getClass()).as(AbstractInAppMessageSend.class);
-                            ResolvableType genericResolvableType = specMessageSendResolvableType.getGeneric(0);
-                            if (genericResolvableType.isAssignableFrom(inputResolvableType)) {
-                                finalMessageSend = messageSend;
-                                findFlag = true;
-                                break;
-                            }
-                        }
-                        if (!findFlag) {
-                            String errorMsg = "No such the subclass-AbstractInAppMessageSend<" +
-                                    (data == null ? Void.TYPE.getName() : data.getClass() +
-                                            ">");
-                            throw new SendMessageException(errorMsg);
-                        }
+                        finalMessageSend = getInAppMessageSend(messageSends, (InAppMessage<?>) _sendMessage);
                     } else {
                         finalMessageSend = this.sendService.getLoadBalancer().getServer(messageSends);
                     }
@@ -119,6 +98,27 @@ public class SendMessageActuator {
                     _sendMessage.setEndTime(new Date());
                 }
         ).next(sendMessage, messageTemplate, new HashMap<>());
+    }
+
+    private static MessageSend<SendMessage> getInAppMessageSend(
+            List<MessageSend<SendMessage>> messageSends, InAppMessage<?> _sendMessage) {
+        Object data = null;
+        for (MessageSend<SendMessage> messageSend : messageSends) {
+            data = _sendMessage.getData();
+            ResolvableType inputResolvableType = data != null ?
+                    ResolvableType.forInstance(data) :
+                    ResolvableType.forClass(Void.class);
+            ResolvableType specMessageSendResolvableType =
+                    ResolvableType.forClass(messageSend.getClass()).as(AbstractInAppMessageSend.class);
+            ResolvableType genericResolvableType = specMessageSendResolvableType.getGeneric(0);
+            if (genericResolvableType.isAssignableFrom(inputResolvableType)) {
+                return messageSend;
+            }
+        }
+        String errorMsg = "No such the subclass-AbstractInAppMessageSend<" +
+                (data == null ? Void.TYPE.getName() : data.getClass() +
+                        ">");
+        throw new SendMessageException(errorMsg);
     }
 
     private SendMessage buildChannelSendMessage(SendChannel channel) {
